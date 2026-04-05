@@ -242,6 +242,20 @@ function FFCKLogo({ className = "" }: { className?: string }) {
   return <img src="/logo-ffck.svg" alt="FFCK" className={className} />;
 }
 
+function SupSportLogo({ className = "" }: { className?: string }) {
+  return <img src="/logo-supsport.png" alt="SupSport" className={className} />;
+}
+
+function BothLogos({ height = "h-7 md:h-9" }: { height?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <SupSportLogo className={`${height} w-auto`} />
+      <div className="w-px h-6 bg-white/25 flex-shrink-0" />
+      <FFCKLogo className={`${height} w-auto`} />
+    </div>
+  );
+}
+
 function WaveBottom({ fill = "hsl(195,100%,99%)" }: { fill?: string }) {
   return (
     <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
@@ -293,14 +307,14 @@ export default function ClubPage() {
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#003d50]/95 backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
-            <FFCKLogo className="h-7 md:h-9 w-auto" />
+            <BothLogos height="h-7 md:h-9" />
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
               <a href="#avantages" className="hover:text-white transition-colors">Avantages</a>
               <a href="#athletes" className="hover:text-white transition-colors">Athlètes</a>
               <a href="#argent" className="flex items-center gap-1.5 hover:text-white transition-colors font-semibold" style={{ color: "#69C3D2" }}>
                 <ArrowDown className="w-3.5 h-3.5" />
-                Votre argent
+                Où va votre don ?
               </a>
               <a href={CLUB.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white transition-colors">
                 ffckayak.be <ExternalLink className="w-3 h-3" />
@@ -334,7 +348,7 @@ export default function ClubPage() {
                 {[
                   { href: "#avantages", label: "Avantages" },
                   { href: "#athletes", label: "Athlètes" },
-                  { href: "#argent", label: "Votre argent", accent: true },
+                  { href: "#argent", label: "Où va votre don ?", accent: true },
                 ].map(link => (
                   <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-white/10"
@@ -370,19 +384,23 @@ export default function ClubPage() {
 
             {/* Left */}
             <motion.div className="flex-1" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <FFCKLogo className="h-10 md:h-14 lg:h-16 w-auto mb-6 md:mb-8" />
+              <div className="flex items-center gap-4 mb-6 md:mb-8">
+                <FFCKLogo className="h-10 md:h-14 lg:h-16 w-auto" />
+                <div className="w-px h-10 bg-white/20" />
+                <SupSportLogo className="h-8 md:h-10 lg:h-12 w-auto opacity-90" />
+              </div>
 
               <div className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 mb-5" style={{ background: "rgba(255,255,255,0.08)" }}>
                 <Gift className="w-3.5 h-3.5" /> Avantages exclusifs pour les supporters
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-                Soutenez nos athlètes<br />
-                <span style={{ color: "#69C3D2" }}>et gagnez des avantages</span>
+                Financez les {ATHLETES.length} athlètes<br />
+                <span style={{ color: "#69C3D2" }}>de notre club kayak</span>
               </h1>
               <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-xl mb-6 md:mb-8">
-                En soutenant le FFCK, vous aidez {ATHLETES.length} athlètes belges à financer leurs compétitions
-                — et vous accédez à des réductions exclusives chez {PARTNERS.length} partenaires sportifs.
+                Nos {ATHLETES.length} athlètes ont besoin de votre soutien pour couvrir leurs inscriptions aux compétitions, leur équipement et leurs déplacements.
+                En échange, accédez à des réductions exclusives chez {PARTNERS.length} partenaires sportifs.
               </p>
 
               {/* Proof example */}
@@ -422,7 +440,7 @@ export default function ClubPage() {
                   </div>
                   <AnimBar pct={clubPct} delay={0.4} />
                   <div className="flex items-center gap-1.5 mt-2 text-sm text-muted-foreground">
-                    <Users className="w-4 h-4" />{ATHLETES.length} athlètes financés
+                    <Users className="w-4 h-4" />{ATHLETES.length} athlètes du club à financer
                   </div>
                 </div>
 
@@ -531,7 +549,7 @@ export default function ClubPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {[
-            { step: "01", icon: <Heart className="w-6 h-6" style={{ color: "#009EBE" }} />, title: "Vous soutenez", desc: `Choisissez un don mensuel (€10–€25) ou un don unique. Votre argent est réparti entre nos ${ATHLETES.length} athlètes pour leurs compétitions, équipements et déplacements.` },
+            { step: "01", icon: <Heart className="w-6 h-6" style={{ color: "#009EBE" }} />, title: "Vous financez le club", desc: `Choisissez un don mensuel (€10–€25) ou un don unique. Votre argent est réparti entre les ${ATHLETES.length} athlètes du club pour payer leurs inscriptions aux compétitions, leur équipement et leurs déplacements.` },
             { step: "02", icon: <Gift className="w-6 h-6" style={{ color: "#009EBE" }} />, title: "Vous choisissez vos avantages", desc: `Don mensuel ou unique, vous choisissez 1 à 4 avantages parmi nos ${PARTNERS.length} partenaires sportifs. Remises de 10% à 20%, fitness offert, coaching gratuit...` },
             { step: "03", icon: <Trophy className="w-6 h-6" style={{ color: "#009EBE" }} />, title: "Tout le monde gagne", desc: "Vous économisez sur vos achats sportifs. Nos athlètes performent au plus haut niveau. Nos partenaires accèdent à une communauté sportive engagée." },
           ].map((item, i) => (
@@ -676,8 +694,8 @@ export default function ClubPage() {
       <section id="athletes" className="container mx-auto px-4 py-12 md:py-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-2">Nos athlètes</h2>
-            <p className="text-muted-foreground text-base md:text-lg">Votre soutien finance directement leur passion</p>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-2">Les {ATHLETES.length} athlètes du club</h2>
+            <p className="text-muted-foreground text-base md:text-lg">Votre don finance directement leurs compétitions, équipements et déplacements</p>
           </div>
           <span className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
             <Star className="w-4 h-4 text-yellow-500" />{ATHLETES.length} athlètes actifs cette saison
@@ -722,9 +740,59 @@ export default function ClubPage() {
         </div>
       </section>
 
-      {/* ═══ VOTRE ARGENT (anchor: #argent) ════════════════════════ */}
-      <section id="argent" className="container mx-auto px-4 pb-12 md:pb-20">
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+      {/* ═══ OÙ VA VOTRE DON (anchor: #argent) ════════════════════ */}
+      <section id="argent" style={{ background: "linear-gradient(180deg,hsl(195,100%,99%) 0%,rgba(0,158,190,0.06) 100%)" }} className="py-12 md:py-20">
+        <div className="container mx-auto px-4">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center max-w-2xl mx-auto mb-10">
+            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold mb-4" style={{ background: "rgba(0,158,190,0.08)", color: "#009EBE", borderColor: "rgba(0,158,190,0.2)" }}>
+              <Target className="w-3.5 h-3.5" /> Transparence totale
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Pourquoi nos athlètes ont besoin de vous</h2>
+            <p className="text-muted-foreground text-base md:text-lg">Chaque euro de votre soutien va directement financer les {ATHLETES.length} athlètes du club — zéro frais de gestion.</p>
+          </motion.div>
+
+          {/* Goal progress banner */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+            className="rounded-[2rem] p-6 md:p-10 mb-8 text-white relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg,#003d50 0%,#009EBE 100%)" }}>
+            <div className="absolute right-0 top-0 w-64 h-64 rounded-full blur-[80px] pointer-events-none" style={{ background: "rgba(105,195,210,0.2)" }} />
+            <div className="relative z-10">
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+                <div>
+                  <p className="text-white/60 text-sm font-semibold uppercase tracking-wide mb-1">Objectif de collecte</p>
+                  <div className="flex items-end gap-3">
+                    <span className="text-4xl md:text-5xl font-black">€{CLUB.clubRaised.toLocaleString("fr-BE")}</span>
+                    <span className="text-white/50 text-lg mb-1">/ €{CLUB.clubGoal.toLocaleString("fr-BE")}</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-4xl md:text-5xl font-black" style={{ color: "#69C3D2" }}>{clubPct}%</p>
+                  <p className="text-white/50 text-sm">{CLUB.clubSupporters} supporters actifs</p>
+                </div>
+              </div>
+              <div className="w-full rounded-full h-4 overflow-hidden mb-4" style={{ background: "rgba(255,255,255,0.15)" }}>
+                <motion.div className="h-4 rounded-full" style={{ background: "linear-gradient(90deg,#69C3D2,#fff)" }}
+                  initial={{ width: 0 }} animate={{ width: `${clubPct}%` }}
+                  transition={{ duration: 1.1, delay: 0.4, ease: "easeOut" }} />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                {[
+                  { label: "Compétitions", pct: "40%", icon: "🏆" },
+                  { label: "Équipement", pct: "30%", icon: "🛶" },
+                  { label: "Déplacements", pct: "20%", icon: "✈️" },
+                  { label: "Coaching", pct: "10%", icon: "🎯" },
+                ].map((item, i) => (
+                  <div key={i} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.1)" }}>
+                    <div className="text-xl mb-1">{item.icon}</div>
+                    <div className="font-black text-lg" style={{ color: "#69C3D2" }}>{item.pct}</div>
+                    <div className="text-white/60 text-xs">{item.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
           className="rounded-[2rem] overflow-hidden border border-border/50">
           <div className="px-5 py-4 md:px-8 md:py-6" style={{ background: "linear-gradient(135deg,#003d50 0%,#009EBE 100%)" }}>
             <div className="flex items-center gap-3">
@@ -732,8 +800,8 @@ export default function ClubPage() {
                 <Target className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-white font-black text-xl md:text-2xl">Votre argent — où va-t-il ?</h2>
-                <p className="text-white/60 text-sm mt-0.5">Transparence totale sur l'utilisation des fonds</p>
+                <h2 className="text-white font-black text-xl md:text-2xl">Répartition détaillée des fonds</h2>
+                <p className="text-white/60 text-sm mt-0.5">Comment chaque euro est utilisé concrètement</p>
               </div>
             </div>
           </div>
@@ -776,6 +844,17 @@ export default function ClubPage() {
             </div>
           </div>
         </motion.div>
+
+          <div className="mt-8 text-center">
+            <a href="#soutenir">
+              <button className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 font-bold text-base hover:opacity-90 hover:scale-[1.01] transition-all shadow-lg" style={{ background: "#009EBE", color: "#fff" }}>
+                <Heart className="w-5 h-5" />
+                Financer nos {ATHLETES.length} athlètes — dès €10/mois
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* ═══ FINAL CTA ══════════════════════════════════════════════ */}
@@ -785,9 +864,11 @@ export default function ClubPage() {
           style={{ background: "linear-gradient(135deg,#003d50 0%,#009EBE 100%)" }}>
           <div className="absolute right-0 top-0 w-96 h-96 rounded-full blur-[100px] pointer-events-none" style={{ background: "rgba(105,195,210,0.18)" }} />
           <div className="relative z-10">
-            <FFCKLogo className="h-10 md:h-12 w-auto mx-auto mb-5 md:mb-6" />
-            <h3 className="text-2xl md:text-4xl font-black mb-4">Rejoignez nos {CLUB.clubSupporters} supporters</h3>
-            <p className="text-white/75 text-base md:text-lg max-w-xl mx-auto mb-2">Dès €10/mois, aidez {ATHLETES.length} athlètes belges et accédez à des réductions chez {PARTNERS.length} partenaires sportifs.</p>
+            <BothLogos height="h-9 md:h-11" />
+            <div className="mt-5 md:mt-6 mb-4">
+              <h3 className="text-2xl md:text-4xl font-black">Rejoignez nos {CLUB.clubSupporters} supporters</h3>
+            </div>
+            <p className="text-white/75 text-base md:text-lg max-w-xl mx-auto mb-2">Dès €10/mois, aidez les {ATHLETES.length} athlètes de notre club à financer leurs compétitions et accédez à des réductions chez {PARTNERS.length} partenaires sportifs.</p>
             <p className="text-white/50 text-sm mb-8">Ou faites un don unique — chaque euro compte.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a href="#soutenir" className="w-full sm:w-auto">
@@ -810,7 +891,11 @@ export default function ClubPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
             <div>
-              <FFCKLogo className="h-10 w-auto mb-4" />
+              <div className="flex items-center gap-3 mb-4">
+                <FFCKLogo className="h-9 w-auto" />
+                <div className="w-px h-7 bg-white/20" />
+                <SupSportLogo className="h-7 w-auto opacity-80" />
+              </div>
               <p className="text-white/40 text-sm leading-relaxed">{CLUB.fullName}<br />{CLUB.location} · Fondée en {CLUB.founded}</p>
             </div>
             <div>
@@ -818,7 +903,7 @@ export default function ClubPage() {
               <ul className="space-y-2 text-sm text-white/40">
                 <li><a href="#avantages" className="hover:text-white transition-colors">Avantages partenaires</a></li>
                 <li><a href="#athletes" className="hover:text-white transition-colors">Nos athlètes</a></li>
-                <li><a href="#argent" className="hover:text-white transition-colors">Votre argent</a></li>
+                <li><a href="#argent" className="hover:text-white transition-colors">Où va votre don ?</a></li>
                 <li><a href="#soutenir" className="hover:text-white transition-colors">Nous soutenir</a></li>
               </ul>
             </div>
