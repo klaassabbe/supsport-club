@@ -860,7 +860,7 @@ export default function ClubPage() {
           <div className="absolute right-0 top-0 w-96 h-96 rounded-full blur-[100px] pointer-events-none" style={{ background: "rgba(105,195,210,0.18)" }} />
           <div className="relative z-10">
             <FFCKLogo className="h-10 md:h-12 w-auto mx-auto mb-5 md:mb-6" />
-            <h3 className="text-2xl md:text-4xl font-black mb-4">Rejoignez nos {CLUB.clubSupporters} supporters</h3>
+            <h3 className="text-2xl md:text-4xl font-black mb-4">Devenez supporter du club !</h3>
             <p className="text-white/75 text-base md:text-lg max-w-xl mx-auto mb-2">Dès €10/mois, aidez les {ATHLETES.length} athlètes de notre club à financer leurs compétitions et accédez à des réductions chez {PARTNERS.length} partenaires sportifs.</p>
             <p className="text-white/50 text-sm mb-8">Ou faites un don unique — chaque euro compte.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
