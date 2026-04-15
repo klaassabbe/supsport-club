@@ -242,6 +242,10 @@ function FFCKLogo({ className = "" }: { className?: string }) {
   return <img src="/logo-ffck.svg" alt="FFCK" className={className} />;
 }
 
+function SupSportLogo({ className = "" }: { className?: string }) {
+  return <img src="/logo-supsport.png" alt="SupSport" className={className} />;
+}
+
 function WaveBottom({ fill = "hsl(195,100%,99%)" }: { fill?: string }) {
   return (
     <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
@@ -266,6 +270,7 @@ function AnimBar({ pct, delay = 0 }: { pct: number; delay?: number }) {
 export default function ClubPage() {
   const [selectedTier, setSelectedTier] = useState(3);
   const [donationType, setDonationType] = useState<"monthly" | "once">("monthly");
+  const [donationOption, setDonationOption] = useState<"athlete" | "club">("athlete");
   const [activePartners, setActivePartners] = useState<number[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const tier = TIERS[selectedTier];
@@ -277,6 +282,11 @@ export default function ClubPage() {
   // Don unique : mêmes paliers qu'en mensuel
   const ONE_TIME_ADVANTAGES: Record<number, number> = { 10: 1, 15: 2, 20: 3, 25: 4 };
   const currentMaxAdvantages = donationType === "monthly" ? tier.advantages : (ONE_TIME_ADVANTAGES[oneTimeAmount] ?? 1);
+
+  const clubSharePct = donationOption === "club" ? 0.05 : 0;
+  function clubShare(amount: number) {
+    return (amount * clubSharePct).toFixed(2).replace(".", ",");
+  }
 
   function togglePartner(i: number) {
     setActivePartners(prev => {
@@ -300,7 +310,7 @@ export default function ClubPage() {
               <a href="#athletes" className="hover:text-white transition-colors">Athlètes</a>
               <a href="#argent" className="flex items-center gap-1.5 hover:text-white transition-colors font-semibold" style={{ color: "#69C3D2" }}>
                 <ArrowDown className="w-3.5 h-3.5" />
-                Votre argent
+                Où va votre don ?
               </a>
               <a href={CLUB.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white transition-colors">
                 ffckayak.be <ExternalLink className="w-3 h-3" />
@@ -308,6 +318,8 @@ export default function ClubPage() {
             </nav>
 
             <div className="flex items-center gap-3">
+              <SupSportLogo className="hidden md:block h-5 w-auto" />
+              <div className="hidden md:block w-px h-6 bg-white/20" />
               <a href="#soutenir" className="hidden md:block">
                 <button className="inline-flex items-center gap-2 rounded-2xl px-5 py-2 text-sm font-bold text-white hover:opacity-90 hover:scale-[1.01] transition-all shadow-sm" style={{ background: "#009EBE" }}>
                   <Heart className="w-4 h-4" /> Soutenir le club
@@ -437,6 +449,28 @@ export default function ClubPage() {
                   ))}
                 </div>
 
+                {/* ── Répartition du don ── */}
+                <div className="mb-5 space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Répartition de votre don</p>
+                  {[
+                    { value: "athlete" as const, label: "100% pour l'athlète", sub: "La totalité de votre don va directement à l'athlète" },
+                    { value: "club" as const, label: "Athlète + Club", sub: "5% de votre don soutient aussi le club" },
+                  ].map(opt => (
+                    <button key={opt.value} onClick={() => setDonationOption(opt.value)}
+                      className="w-full flex items-start gap-3 rounded-xl p-3 text-left border transition-all"
+                      style={{ background: donationOption === opt.value ? "rgba(0,158,190,0.06)" : "transparent", borderColor: donationOption === opt.value ? "#009EBE" : "#e5e7eb" }}>
+                      <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center"
+                        style={{ borderColor: donationOption === opt.value ? "#009EBE" : "#d1d5db" }}>
+                        {donationOption === opt.value && <span className="w-2 h-2 rounded-full" style={{ background: "#009EBE" }} />}
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{opt.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{opt.sub}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
                 {donationType === "monthly" ? (
                   <>
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Choisir votre niveau</p>
@@ -451,6 +485,9 @@ export default function ClubPage() {
                           <div className="text-xs font-semibold mt-1" style={{ color: "#009EBE" }}>
                             {t.advantages} avantage{t.advantages > 1 ? "s" : ""}
                           </div>
+                          {donationOption === "club" && (
+                            <div className="text-xs font-semibold mt-1" style={{ color: "#16a34a" }}>dont {clubShare(t.amount)}€/mois pour le club</div>
+                          )}
                         </button>
                       ))}
                     </div>
@@ -478,6 +515,9 @@ export default function ClubPage() {
                           <div className="text-xs font-semibold mt-1" style={{ color: "#009EBE" }}>
                             {t.advantages} avantage{t.advantages > 1 ? "s" : ""}
                           </div>
+                          {donationOption === "club" && (
+                            <div className="text-xs font-semibold mt-1" style={{ color: "#16a34a" }}>dont {clubShare(t.amount)}€ pour le club</div>
+                          )}
                         </button>
                       ))}
                     </div>
