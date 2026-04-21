@@ -1,11 +1,17 @@
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Users, Heart, ExternalLink, Award, Calendar,
-  ChevronRight, Trophy, Target, CheckCircle, Star, Share2,
+  ChevronRight, Trophy, Target, CheckCircle, Star,
   TrendingUp, Gift, Zap, ShieldCheck, ArrowRight, ArrowDown,
   Menu, X
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  GoldSponsorBanner,
+  type Sponsor,
+} from "../components/SponsorBanner";
+import { ATHLETES } from "../data/athletes";
 
 // ── Club ───────────────────────────────────────────────────────────
 const CLUB = {
@@ -128,6 +134,26 @@ const PARTNERS = [
   },
 ];
 
+// ── Sponsors publicitaires ────────────────────────────────────────
+const SPONSORS: Sponsor[] = [
+  {
+    id: "xrun",
+    name: "XRUN",
+    tier: "gold",
+    logo: "https://xrun.be/wp-content/uploads/2024/08/xrun-%C2%AElogo_whiteshadow.svg",
+    tagline: "Un pas plus loin",
+    description: "Spécialiste belge du running & outdoor — boutiques à Battice & Malmedy, staffées par des passionnés pour un conseil personnalisé.",
+    discount: "-20% dans toutes les boutiques",
+    url: "https://www.xrun.be",
+    bgFrom: "#0d1b2a",
+    bgTo: "#1b3a4b",
+    accentColor: "#e85d04",
+    textColor: "#ffffff",
+    category: "Running & Outdoor",
+    since: 2024,
+  },
+];
+
 // ── Tiers ─────────────────────────────────────────────────────────
 const TIERS = [
   { amount: 10, label: "Supporter", advantages: 1, icon: "❤️", popular: false },
@@ -136,97 +162,6 @@ const TIERS = [
   { amount: 25, label: "Champion", advantages: 4, icon: "🏅", popular: true },
 ];
 
-// ── Kayak athletes with Unsplash photos ───────────────────────────
-const ATHLETES = [
-  {
-    id: "1",
-    name: "Thomas Debelle",
-    sport: "Descente K1",
-    city: "Namur",
-    badge: "Elite",
-    desc: "Spécialiste de la descente en eaux vives, Thomas dévale les rapides à plus de 30 km/h. Double champion de Belgique K1, il se prépare pour les Championnats d'Europe 2026.",
-    results: ["2× Champion de Belgique K1", "5e Coupe du Monde ICF"],
-    photo: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=500&fit=crop&q=80",
-    pos: "object-center",
-  },
-  {
-    id: "2",
-    name: "Marie Fonteneau",
-    sport: "Slalom C1",
-    city: "Liège",
-    badge: "Nationale",
-    desc: "Précision, lecture de l'eau et vitesse d'exécution : Marie est l'une des meilleures slalomeuses belges. Sélectionnée en équipe nationale, elle vise le top 15 mondial ICF.",
-    results: ["Championne de Belgique Slalom", "Finaliste ChEuro C1"],
-    photo: "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&h=500&fit=crop&q=80",
-    pos: "object-top",
-  },
-  {
-    id: "3",
-    name: "Antoine Leclercq",
-    sport: "Sprint K4",
-    city: "Bruxelles",
-    badge: "Elite",
-    desc: "La puissance et la synchronisation au service du sprint. Antoine fait partie du K4 national médaillé d'argent aux derniers Championnats d'Europe. Cap sur les Mondiaux.",
-    results: ["Médaille d'argent ChEuro K4", "Champion Belgique Sprint"],
-    photo: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=500&fit=crop&q=80",
-    pos: "object-center",
-  },
-  {
-    id: "4",
-    name: "Juliette Marin",
-    sport: "Polo Kayak",
-    city: "Namur",
-    badge: "Espoir",
-    desc: "Le polo kayak, c'est du football sur l'eau en kayak. Juliette est l'une des meilleures joueuses U23 de Belgique, redoutable en attaque lors des tournois européens.",
-    results: ["Finaliste ChEuro Polo", "Meilleure joueuse U23"],
-    photo: "https://images.unsplash.com/photo-1473854908-40b3f6765fab?w=400&h=500&fit=crop&q=80",
-    pos: "object-top",
-  },
-  {
-    id: "5",
-    name: "Pierre Vandamme",
-    sport: "Marathon K1",
-    city: "Huy",
-    badge: "National",
-    desc: "42 km de pagaie, une stratégie de course millimétrée et une endurance hors du commun. Pierre est le champion de Belgique marathon en titre et vise le top 10 européen.",
-    results: ["Champion Belgique Marathon", "8e ChEuro Marathon"],
-    photo: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop&q=80",
-    pos: "object-top",
-  },
-  {
-    id: "6",
-    name: "Sophie Lacombe",
-    sport: "Kayak de mer",
-    city: "Bruges",
-    badge: "Aventure",
-    desc: "Sophie repousse les frontières du kayak de mer avec des traversées de plusieurs jours en mer du Nord et en Atlantique. Son prochain défi : traverser la Manche en solo.",
-    results: ["Tour de Bretagne 2023", "Recordwoman nationale V1"],
-    photo: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400&h=500&fit=crop&q=80",
-    pos: "object-center",
-  },
-  {
-    id: "7",
-    name: "Hugo Watteau",
-    sport: "Freestyle",
-    city: "Dinant",
-    badge: "Junior",
-    desc: "Sur les vagues et dans les holes de la Lesse, Hugo enchaîne boucles et loopings millimétrés. Meilleur jeune belge du circuit ICF Freestyle, il ambitionne le podium mondial.",
-    results: ["3e Championnat de Belgique", "Finaliste Playwave Cup"],
-    photo: "https://images.unsplash.com/photo-1565043934134-fdbefc2b51ff?w=400&h=500&fit=crop&q=80",
-    pos: "object-center",
-  },
-  {
-    id: "8",
-    name: "Clara Delattre",
-    sport: "Va'a V1",
-    city: "Charleroi",
-    badge: "Espoir",
-    desc: "Le Va'a (pirogue hawaïenne) est la discipline olympique la plus récente. Clara est la pionnière belge de cette pratique, déjà sélectionnée en équipe nationale pour les premiers Euros.",
-    results: ["Sélectionnée équipe nationale Va'a", "Recordwoman nationale V1 200m"],
-    photo: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=400&h=500&fit=crop&q=80",
-    pos: "object-top",
-  },
-];
 
 const BADGE_COLORS: Record<string, string> = {
   Elite: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -268,6 +203,7 @@ function AnimBar({ pct, delay = 0 }: { pct: number; delay?: number }) {
 
 // ── Page ───────────────────────────────────────────────────────────
 export default function ClubPage() {
+  const navigate = useNavigate();
   const [selectedTier, setSelectedTier] = useState(3);
   const [donationType, setDonationType] = useState<"monthly" | "once">("monthly");
   const [donationOption, setDonationOption] = useState<"athlete" | "club">("athlete");
@@ -276,7 +212,6 @@ export default function ClubPage() {
   const tier = TIERS[selectedTier];
   const clubPct = Math.round((CLUB.clubRaised / CLUB.clubGoal) * 100);
 
-  const ONE_TIME_AMOUNTS = [10, 15, 20, 25];
   const [oneTimeAmount, setOneTimeAmount] = useState(25);
 
   // Don unique : mêmes paliers qu'en mensuel
@@ -289,9 +224,10 @@ export default function ClubPage() {
   }
 
   function togglePartner(i: number) {
+    const max = tier.advantages;
     setActivePartners(prev => {
       if (prev.includes(i)) return prev.filter(x => x !== i);
-      if (prev.length >= currentMaxAdvantages) return [...prev.slice(1), i];
+      if (prev.length >= max) return [...prev.slice(1), i];
       return [...prev, i];
     });
   }
@@ -303,7 +239,9 @@ export default function ClubPage() {
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#003d50]/95 backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
-            <FFCKLogo className="h-7 md:h-9 w-auto" />
+            <a href="#" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              <FFCKLogo className="h-10 md:h-12 w-auto" />
+            </a>
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
               <a href="#avantages" className="hover:text-white transition-colors">Avantages</a>
@@ -382,7 +320,7 @@ export default function ClubPage() {
 
             {/* Left */}
             <motion.div className="flex-1" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <FFCKLogo className="h-10 md:h-14 lg:h-16 w-auto mb-6 md:mb-8" />
+              <FFCKLogo className="h-16 md:h-20 lg:h-24 w-auto mb-6 md:mb-8" />
 
               <div className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 mb-5" style={{ background: "rgba(255,255,255,0.08)" }}>
                 <Gift className="w-3.5 h-3.5" /> Avantages exclusifs pour les supporters
@@ -397,8 +335,8 @@ export default function ClubPage() {
                 — et vous accédez à des réductions exclusives chez {PARTNERS.length} partenaires sportifs.
               </p>
 
-              {/* Proof example */}
-              <div className="rounded-2xl p-4 md:p-5 mb-6 md:mb-8" style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)" }}>
+              {/* Proof example — caché sur mobile pour raccourcir le scroll avant la carte */}
+              <div className="hidden md:block rounded-2xl p-4 md:p-5 mb-6 md:mb-8" style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)" }}>
                 <p className="text-white/60 text-xs font-semibold uppercase tracking-wide mb-3">Exemple — niveau Champion (€25/mois)</p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between gap-2 text-white/80"><span className="min-w-0 truncate">Chaussures trail chez Trakks</span><span className="line-through text-white/40 flex-shrink-0">€270</span></div>
@@ -453,8 +391,8 @@ export default function ClubPage() {
                 <div className="mb-5 space-y-2">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Répartition de votre don</p>
                   {[
-                    { value: "athlete" as const, label: "100% pour l'athlète", sub: "La totalité de votre don va directement à l'athlète" },
-                    { value: "club" as const, label: "Athlète + Club", sub: "5% de votre don soutient aussi le club" },
+                    { value: "athlete" as const, label: "Cagnotte des athlètes", sub: "100% versé dans la cagnotte collective, répartie entre tous nos athlètes" },
+                    { value: "club" as const, label: "Athlètes + frais du club", sub: "95% cagnotte athlètes · 5% frais de fonctionnement du club" },
                   ].map(opt => (
                     <button key={opt.value} onClick={() => setDonationOption(opt.value)}
                       className="w-full flex items-start gap-3 rounded-xl p-3 text-left border transition-all"
@@ -559,6 +497,17 @@ export default function ClubPage() {
         </div>
       </section>
 
+      {/* ═══ SPONSOR GOLD BANNER ════════════════════════════════════ */}
+      {SPONSORS.filter(s => s.tier === "gold").length > 0 && (
+        <section className="container mx-auto px-4 py-6 md:py-8">
+          <div className="space-y-4">
+            {SPONSORS.filter(s => s.tier === "gold").map(sponsor => (
+              <GoldSponsorBanner key={sponsor.id} sponsor={sponsor} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ═══ WIN-WIN ════════════════════════════════════════════════ */}
       <section id="comment" className="container mx-auto px-4 py-12 md:py-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
@@ -593,7 +542,7 @@ export default function ClubPage() {
             <p className="text-white/60 text-sm mt-1">Vous choisissez 4 avantages partenaires</p>
           </div>
           <div className="bg-card p-5 md:p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
               <div>
                 <h4 className="font-bold text-foreground mb-5">Ce que vous économisez en 1 mois :</h4>
                 <div className="space-y-3">
@@ -644,11 +593,11 @@ export default function ClubPage() {
             <p className="text-white/60 text-base md:text-lg max-w-xl mx-auto">En tant que supporter FFCK, vous accédez à ces réductions chez nos partenaires sportifs.</p>
           </motion.div>
 
-          {/* Tier selector */}
-          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-3 mb-8 max-w-sm md:max-w-none mx-auto">
+          {/* Tier selector — scroll horizontal sur mobile */}
+          <div className="flex gap-3 overflow-x-auto pb-2 mb-8 md:flex-wrap md:justify-center md:overflow-visible md:pb-0 scrollbar-hide">
             {TIERS.map((t, i) => (
               <button key={t.amount} onClick={() => setSelectedTier(i)}
-                className={`relative rounded-2xl px-5 py-2.5 text-sm font-semibold transition-all ${selectedTier === i ? "text-white shadow-lg scale-105" : "text-white/60 hover:text-white/80"}`}
+                className={`relative flex-shrink-0 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-all ${selectedTier === i ? "text-white shadow-lg scale-105" : "text-white/60 hover:text-white/80"}`}
                 style={{ background: selectedTier === i ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.07)", border: selectedTier === i ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.1)" }}>
                 {t.popular && <span className="absolute -top-2 -right-2 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "#69C3D2", color: "#003d50" }}>Populaire</span>}
                 {t.icon} {t.label} · {t.advantages} avantage{t.advantages > 1 ? "s" : ""}
@@ -657,11 +606,8 @@ export default function ClubPage() {
           </div>
 
           <p className="text-center text-white/50 text-sm mb-8">
-            {donationType === "monthly"
-              ? <>Niveau <strong className="text-white">{tier.label}</strong> (€{tier.amount}/mois)</>
-              : <>Don unique <strong className="text-white">€{oneTimeAmount}</strong></>}
-            {" "}: cliquez pour sélectionner vos {currentMaxAdvantages} avantage{currentMaxAdvantages > 1 ? "s" : ""}
-            {activePartners.length > 0 && <span style={{ color: "#69C3D2" }}> · {activePartners.length}/{currentMaxAdvantages} sélectionné{activePartners.length > 1 ? "s" : ""}</span>}
+            Niveau <strong className="text-white">{tier.label}</strong> : cliquez pour sélectionner vos {tier.advantages} avantage{tier.advantages > 1 ? "s" : ""}
+            {activePartners.length > 0 && <span style={{ color: "#69C3D2" }}> · {activePartners.length}/{tier.advantages} sélectionné{activePartners.length > 1 ? "s" : ""}</span>}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -727,14 +673,17 @@ export default function ClubPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {ATHLETES.map((a, i) => (
             <motion.div key={a.id} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.07 }}>
-              <div className="overflow-hidden rounded-[1.5rem] border border-border/50 bg-card hover:shadow-[0_20px_60px_rgba(0,158,190,0.14)] transition-all duration-500 hover:-translate-y-1.5">
+              <div
+                onClick={() => navigate(`/athlete/${a.id}`)}
+                className="overflow-hidden rounded-[1.5rem] border border-border/50 bg-card hover:shadow-[0_20px_60px_rgba(0,158,190,0.18)] transition-all duration-500 hover:-translate-y-2 cursor-pointer group"
+              >
                 <div className="relative h-72 overflow-hidden">
                   <img src={a.photo} alt={a.name}
-                    className={`w-full h-full object-cover ${a.pos} hover:scale-105 transition-transform duration-700`}
+                    className={`w-full h-full object-cover ${a.pos} group-hover:scale-105 transition-transform duration-700`}
                     onError={e => {
                       (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=500&fit=crop&q=80`;
                     }} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent" />
                   <div className="absolute top-4 left-4">
                     <span className="inline-flex items-center rounded-full border border-white/20 bg-black/30 backdrop-blur-sm px-2.5 py-0.5 text-xs font-semibold text-white">{a.sport}</span>
                   </div>
@@ -754,6 +703,11 @@ export default function ClubPage() {
                         <Award className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />{r}
                       </div>
                     ))}
+                  </div>
+                  <div className="pt-1">
+                    <div className="inline-flex items-center gap-1.5 text-xs font-semibold group-hover:gap-2.5 transition-all" style={{ color: "#009EBE" }}>
+                      Voir sa page <ChevronRight className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -818,35 +772,8 @@ export default function ClubPage() {
         </motion.div>
       </section>
 
-      {/* ═══ FINAL CTA ══════════════════════════════════════════════ */}
-      <section className="container mx-auto px-4 pb-28 md:pb-24">
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-          className="rounded-[2rem] p-8 md:p-14 text-center text-white relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg,#003d50 0%,#009EBE 100%)" }}>
-          <div className="absolute right-0 top-0 w-96 h-96 rounded-full blur-[100px] pointer-events-none" style={{ background: "rgba(105,195,210,0.18)" }} />
-          <div className="relative z-10">
-            <FFCKLogo className="h-10 md:h-12 w-auto mx-auto mb-5 md:mb-6" />
-            <h3 className="text-2xl md:text-4xl font-black mb-4">Rejoignez nos {CLUB.clubSupporters} supporters</h3>
-            <p className="text-white/75 text-base md:text-lg max-w-xl mx-auto mb-2">Dès €10/mois, aidez {ATHLETES.length} athlètes belges et accédez à des réductions chez {PARTNERS.length} partenaires sportifs.</p>
-            <p className="text-white/50 text-sm mb-8">Ou faites un don unique — chaque euro compte.</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="#soutenir" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-white font-bold px-8 py-3.5 text-base hover:bg-white/90 hover:scale-[1.01] transition-all shadow-sm" style={{ color: "#009EBE" }}>
-                  <Heart className="w-5 h-5" /> Devenir supporter mensuel
-                </button>
-              </a>
-              <a href="#soutenir" className="w-full sm:w-auto" onClick={() => setDonationType("once")}>
-                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 text-white font-semibold px-8 py-3.5 hover:bg-white/10 hover:scale-[1.01] transition-all">
-                  💳 Faire un don unique
-                </button>
-              </a>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
       {/* ═══ FOOTER ═════════════════════════════════════════════════ */}
-      <footer style={{ background: "#003d50" }} className="text-white py-12">
+      <footer style={{ background: "#003d50" }} className="text-white pt-12 pb-28 md:pb-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
             <div>
