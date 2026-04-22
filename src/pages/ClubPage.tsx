@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Users, Heart, ExternalLink, Award, Calendar,
-  ChevronRight, Trophy, Target, CheckCircle, Star,
+  ChevronRight, ChevronDown, Trophy, Target, CheckCircle, Star,
   TrendingUp, Gift, Zap, ShieldCheck, ArrowRight,
   Menu, X
 } from "lucide-react";
@@ -28,42 +28,37 @@ const PARTNERS = [
   { name: "Trakks", category: "Running & Outdoor", icon: "👟", shortDiscount: "-20%", fullDesc: "20% sur les vêtements et chaussures (hors accessoires, nutrition, librairie et électro, non cumulable avec d'autres promotions).", url: "https://www.trakks.be" },
   { name: "XRUN", category: "Running & Outdoor", icon: "🏃", shortDiscount: "-20%", fullDesc: "20% de réduction dans toutes les boutiques de Battice et Malmedy.", url: "https://www.xrun.be" },
   { name: "Nutri-bay", category: "Nutrition sportive", icon: "💊", shortDiscount: "-10%", fullDesc: "10% de réduction sur tout le site web Nutri-bay (running, trail, triathlon, cyclisme, natation).", url: "https://www.nutri-bay.com" },
-  { name: "MJ Sport", category: "Équipement sportif", icon: "🏪", shortDiscount: "-15%", fullDesc: "15% sur les chaussures et 10% sur le textile dans les boutiques de Waremme et Rocourt (Nike, Adidas, running, tennis, padel, natation, fitness).", url: "https://www.mjsport.be" },
+  { name: "MJ Sport", category: "Équipement sportif", icon: "🏪", shortDiscount: "-15%", fullDesc: "15% sur les chaussures et 10% sur le textile dans les boutiques de Waremme et Rocourt.", url: "https://www.mjsport.be" },
   { name: "Physiosport", category: "Santé & Performance", icon: "💆", shortDiscount: "-15%", fullDesc: "15% sur tous les services : récupération musculaire 90 min (50€ → 42,50€) et coaching sportif individuel 90 min (50€ → 42,50€).", url: "https://www.instagram.com/__physiosport__/" },
   { name: "Respire Sports", category: "Running & Cyclisme", icon: "🚴", shortDiscount: "-20%", fullDesc: "20% dans tout le magasin de Jalhay (sauf électronique) et 10% dans le magasin de vélo de Spa.", url: "https://www.respiresports.be" },
-  { name: "Kineo Fitness", category: "Fitness & Wellness", icon: "🏋️", shortDiscount: "1 mois\noffert", fullDesc: "1 mois gratuit à l'achat d'un abonnement 12 mois. Valable dans les 7 centres en Wallonie (piscines 29°C, jacuzzis, saunas, hammams).", url: "https://www.kineo-fitness.com/" },
+  { name: "Kineo Fitness", category: "Fitness & Wellness", icon: "🏋️", shortDiscount: "1 mois\noffert", fullDesc: "1 mois gratuit à l'achat d'un abonnement 12 mois. Valable dans les 7 centres en Wallonie.", url: "https://www.kineo-fitness.com/" },
   { name: "Foodbag", category: "Nutrition & Bien-être", icon: "🥗", shortDiscount: "-€75", fullDesc: "75€ de réduction sur vos trois premières commandes (3 × 25€). Réservé aux nouveaux clients uniquement.", url: "https://www.foodbag.be" },
-  { name: "IKIBA Sport", category: "Équipement sportif", icon: "🏑", shortDiscount: "jusqu'à\n-20%", fullDesc: "5% sur les sticks et chaussures, 10% sur le textile et accessoires, 20% sur les articles IKIBA (remises non cumulables).", url: "https://www.ikiba-sport.be/" },
-  { name: "Altitude Training", category: "Équipement altitude", icon: "⛰️", shortDiscount: "-10%", fullDesc: "10% de réduction sur tout le matériel altitude (masques, tentes hypoxiques, générateurs altitude personnalisables).", url: "https://www.altitude-training.be" },
+  { name: "IKIBA Sport", category: "Équipement sportif", icon: "🏑", shortDiscount: "jusqu'à\n-20%", fullDesc: "5% sur les sticks et chaussures, 10% sur le textile et accessoires, 20% sur les articles IKIBA.", url: "https://www.ikiba-sport.be/" },
+  { name: "Altitude Training", category: "Équipement altitude", icon: "⛰️", shortDiscount: "-10%", fullDesc: "10% de réduction sur tout le matériel altitude (masques, tentes hypoxiques, générateurs).", url: "https://www.altitude-training.be" },
   { name: "Swiss Me Up", category: "Stages altitude", icon: "🇨🇭", shortDiscount: "Tarif\nspécial", fullDesc: "Tarif préférentiel sur les stages d'entraînement en altitude à Pontresina (Suisse). Note moyenne 9,2/10.", url: "https://www.swissmeup.ch" },
   { name: "Formyfit", category: "Coaching running", icon: "🏅", shortDiscount: "GRATUIT", fullDesc: "Coaching running 100% GRATUIT. Prix de base 120€, prix SupSport 50€, remboursement mutuelle 50€ = Gratuit !", url: "https://www.formyfit.com/fr/" },
-  { name: "Spa Racing", category: "Équipement auto", icon: "🏎️", shortDiscount: "-12%", fullDesc: "12% de réduction à partir de 150€ d'achat en magasin (combinaisons, casques, gants pilote, pièces techniques, karting).", url: "https://sparacing.com/" },
+  { name: "Spa Racing", category: "Équipement auto", icon: "🏎️", shortDiscount: "-12%", fullDesc: "12% de réduction à partir de 150€ d'achat en magasin (combinaisons, casques, gants pilote, pièces techniques).", url: "https://sparacing.com/" },
 ];
 
-// ── Sponsors ───────────────────────────────────────────────────────
+// ── Sponsors ──────────────────────────────────────────────────────
 const SPONSORS: Sponsor[] = [
   {
-    id: "xrun",
-    name: "XRUN",
-    tier: "gold",
+    id: "xrun", name: "XRUN", tier: "gold",
     logo: "https://xrun.be/wp-content/uploads/2024/08/xrun-%C2%AElogo_whiteshadow.svg",
     tagline: "Un pas plus loin",
-    description: "Spécialiste belge du running & outdoor — boutiques à Battice & Malmedy, staffées par des passionnés pour un conseil personnalisé.",
+    description: "Spécialiste belge du running & outdoor — boutiques à Battice & Malmedy.",
     discount: "-20% dans toutes les boutiques",
     url: "https://www.xrun.be",
-    bgFrom: "#0d1b2a",
-    bgTo: "#1b3a4b",
-    accentColor: "#e85d04",
-    textColor: "#ffffff",
-    category: "Running & Outdoor",
-    since: 2024,
+    bgFrom: "#0d1b2a", bgTo: "#1b3a4b",
+    accentColor: "#e85d04", textColor: "#ffffff",
+    category: "Running & Outdoor", since: 2024,
   },
 ];
 
 // ── Tiers ─────────────────────────────────────────────────────────
 const TIERS = [
   { amount: 10, label: "Supporter", advantages: 1, icon: "❤️", popular: false },
-  { amount: 15, label: "Fan", advantages: 2, icon: "⭐", popular: false },
+  { amount: 15, label: "Fan",       advantages: 2, icon: "⭐", popular: false },
   { amount: 20, label: "Ambassadeur", advantages: 3, icon: "📸", popular: false },
   { amount: 25, label: "Champion", advantages: 4, icon: "🏅", popular: true },
 ];
@@ -77,8 +72,7 @@ const BADGE_COLORS: Record<string, string> = {
   Aventure: "bg-orange-100 text-orange-800 border-orange-200",
 };
 
-// ── Sections ───────────────────────────────────────────────────────
-const SECTION_NAMES = ["Accueil", "Concept", "Avantages", "Athlètes", "Transparence", "Contact"];
+const SECTION_NAMES = ["Accueil", "Comment", "Avantages", "Athlètes", "Soutenir", "Contact"];
 const SECTION_H = "calc(100vh - 4rem)";
 
 // ── Helpers ────────────────────────────────────────────────────────
@@ -101,18 +95,17 @@ function AnimBar({ pct, delay = 0 }: { pct: number; delay?: number }) {
 // ── Page ───────────────────────────────────────────────────────────
 export default function ClubPage() {
   const navigate = useNavigate();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef   = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-  const [activeSection, setActiveSection] = useState(0);
-
-  const [selectedTier, setSelectedTier] = useState(3);
-  const [donationType, setDonationType] = useState<"monthly" | "once">("monthly");
+  const [activeSection, setActiveSection]   = useState(0);
+  const [selectedTier, setSelectedTier]     = useState(3);
+  const [donationType, setDonationType]     = useState<"monthly" | "once">("monthly");
   const [donationOption, setDonationOption] = useState<"athlete" | "club">("athlete");
   const [activePartners, setActivePartners] = useState<number[]>([]);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [oneTimeAmount, setOneTimeAmount] = useState(25);
+  const [menuOpen, setMenuOpen]             = useState(false);
+  const [oneTimeAmount, setOneTimeAmount]   = useState(25);
 
-  const tier = TIERS[selectedTier];
+  const tier    = TIERS[selectedTier];
   const clubPct = Math.round((CLUB.clubRaised / CLUB.clubGoal) * 100);
   const ONE_TIME_ADVANTAGES: Record<number, number> = { 10: 1, 15: 2, 20: 3, 25: 4 };
   const clubSharePct = donationOption === "club" ? 0.05 : 0;
@@ -129,7 +122,7 @@ export default function ClubPage() {
     });
   }
   function scrollToSection(index: number) {
-    const section = sectionRefs.current[index];
+    const section   = sectionRefs.current[index];
     const container = scrollRef.current;
     if (section && container) {
       container.scrollTo({ top: section.offsetTop, behavior: "smooth" });
@@ -137,22 +130,23 @@ export default function ClubPage() {
     setMenuOpen(false);
   }
 
-  // Track active section via scroll position
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
-    const handleScroll = () => {
+    const onScroll = () => {
       const idx = Math.round(container.scrollTop / container.clientHeight);
       setActiveSection(Math.max(0, Math.min(idx, SECTION_NAMES.length - 1)));
     };
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
 
-      {/* ══ HEADER ════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════════
+          HEADER
+      ══════════════════════════════════════════════════════════════ */}
       <header className="flex-shrink-0 relative z-50 border-b border-white/10 bg-[#003d50]/95 backdrop-blur-xl">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <button onClick={() => scrollToSection(0)}>
@@ -171,8 +165,8 @@ export default function ClubPage() {
           <div className="flex items-center gap-3">
             <SupSportLogo className="hidden md:block h-5 w-auto" />
             <div className="hidden md:block w-px h-6 bg-white/20" />
-            <button onClick={() => scrollToSection(0)}
-              className="hidden md:inline-flex items-center gap-2 rounded-2xl px-5 py-2 text-sm font-bold text-white hover:opacity-90 hover:scale-[1.01] transition-all shadow-sm"
+            <button onClick={() => scrollToSection(4)}
+              className="hidden md:inline-flex items-center gap-2 rounded-2xl px-5 py-2 text-sm font-bold text-white hover:opacity-90 transition-all shadow-sm"
               style={{ background: "#009EBE" }}>
               <Heart className="w-4 h-4" /> Soutenir le club
             </button>
@@ -182,11 +176,9 @@ export default function ClubPage() {
           </div>
         </div>
 
-        {/* Mobile dropdown — floats over scroll content */}
         <AnimatePresence>
           {menuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
               className="absolute top-16 left-0 right-0 overflow-hidden md:hidden border-t border-white/10 shadow-xl z-50"
               style={{ background: "#002d3e" }}>
@@ -198,7 +190,7 @@ export default function ClubPage() {
                   </button>
                 ))}
                 <div className="pt-2">
-                  <button onClick={() => scrollToSection(0)}
+                  <button onClick={() => scrollToSection(4)}
                     className="w-full inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white"
                     style={{ background: "#009EBE" }}>
                     <Heart className="w-4 h-4" /> Soutenir le club
@@ -210,201 +202,191 @@ export default function ClubPage() {
         </AnimatePresence>
       </header>
 
-      {/* ══ SCROLL CONTAINER ══════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════════
+          SCROLL CONTAINER
+      ══════════════════════════════════════════════════════════════ */}
       <div ref={scrollRef} className="flex-1 overflow-y-scroll" style={{ scrollSnapType: "y mandatory" }}>
 
-        {/* ────────────────────────────────────────────────────────────
-            SECTION 1 — HERO
-        ──────────────────────────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════════
+            S1 — ACCUEIL : le pitch en 10 secondes
+        ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[0] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H }}
-          className="relative flex items-center overflow-y-auto md:overflow-hidden"
+          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(135deg,#003d50 0%,#006880 60%,#009EBE 100%)" }}
+          className="relative flex flex-col items-center justify-center text-center overflow-hidden px-4"
         >
-          {/* Background */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg,#003d50 0%,#006880 50%,#009EBE 100%)" }} />
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-[120px] pointer-events-none" style={{ background: "rgba(105,195,210,0.15)" }} />
-          <div className="absolute bottom-10 left-1/4 w-64 h-64 rounded-full blur-[80px] pointer-events-none" style={{ background: "rgba(255,56,0,0.06)" }} />
+          {/* Blobs */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[130px] pointer-events-none opacity-20" style={{ background: "#69C3D2" }} />
+          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full blur-[80px] pointer-events-none opacity-10" style={{ background: "#e85d04" }} />
 
-          <div className="relative z-10 container mx-auto px-4 w-full py-6 md:py-0">
-            <div className="flex flex-col lg:flex-row items-start gap-7 lg:gap-10">
+          <motion.div className="relative z-10 flex flex-col items-center max-w-3xl"
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
 
-              {/* Left */}
-              <motion.div className="flex-1" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-                <FFCKLogo className="h-12 md:h-14 w-auto mb-4" />
-
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 mb-3" style={{ background: "rgba(255,255,255,0.08)" }}>
-                  <Gift className="w-3.5 h-3.5" /> Avantages exclusifs pour les supporters
-                </div>
-
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">
-                  Soutenez nos athlètes<br />
-                  <span style={{ color: "#69C3D2" }}>et gagnez des avantages</span>
-                </h1>
-                <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-lg mb-5">
-                  En soutenant le FFCK, vous aidez {ATHLETES.length} athlètes belges à financer leurs compétitions — et vous accédez à des réductions exclusives chez {PARTNERS.length} partenaires sportifs.
-                </p>
-
-                {/* Stats chips */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-5">
-                  {[
-                    { val: String(ATHLETES.length), label: "athlètes", icon: <Trophy className="w-4 h-4" /> },
-                    { val: String(PARTNERS.length), label: "partenaires", icon: <Gift className="w-4 h-4" /> },
-                    { val: `€${(CLUB.clubRaised / 1000).toFixed(1)}k`, label: "collectés", icon: <TrendingUp className="w-4 h-4" /> },
-                    { val: "jusqu'à €100", label: "d'économies", icon: <Zap className="w-4 h-4" /> },
-                  ].map((s, i) => (
-                    <div key={i} className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                      <span style={{ color: "#69C3D2" }}>{s.icon}</span>
-                      <div>
-                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                        <div className="text-white/50 text-xs mt-0.5">{s.label}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="hidden md:flex flex-wrap gap-4 text-xs text-white/40">
-                  <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3" />{CLUB.location}</span>
-                  <span className="flex items-center gap-1.5"><Calendar className="w-3 h-3" />Fondé en {CLUB.founded}</span>
-                  <span className="flex items-center gap-1.5"><Users className="w-3 h-3" />{CLUB.members} membres</span>
-                </div>
-              </motion.div>
-
-              {/* Right — Donation card */}
-              <motion.div className="w-full lg:w-[375px] flex-shrink-0"
-                initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}>
-                <div className="rounded-[1.5rem] bg-white p-5 shadow-[0_30px_80px_rgba(0,0,0,0.3)]">
-
-                  {/* Progress */}
-                  <div className="mb-4">
-                    <div className="flex justify-between items-end mb-1.5">
-                      <div>
-                        <span className="text-2xl font-black text-foreground">€{CLUB.clubRaised.toLocaleString("fr-BE")}</span>
-                        <span className="text-muted-foreground text-xs ml-1">/ €{CLUB.clubGoal.toLocaleString("fr-BE")}</span>
-                      </div>
-                      <span className="font-bold text-sm" style={{ color: "#009EBE" }}>{clubPct}%</span>
-                    </div>
-                    <AnimBar pct={clubPct} delay={0.4} />
-                    <div className="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
-                      <Users className="w-3 h-3" />{ATHLETES.length} athlètes financés
-                    </div>
-                  </div>
-
-                  {/* Don type */}
-                  <div className="flex rounded-xl overflow-hidden border border-border mb-3">
-                    {(["monthly", "once"] as const).map(type => (
-                      <button key={type} onClick={() => setDonationType(type)}
-                        className={`flex-1 py-2 text-xs font-semibold transition-all ${donationType === type ? "text-white" : "text-muted-foreground"}`}
-                        style={{ background: donationType === type ? "#009EBE" : "transparent" }}>
-                        {type === "monthly" ? "🔄 Mensuel" : "💳 Don unique"}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Répartition */}
-                  <div className="mb-3 space-y-1.5">
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Répartition</p>
-                    {[
-                      { value: "athlete" as const, label: "Cagnotte des athlètes", sub: "100% versé dans la cagnotte collective" },
-                      { value: "club" as const, label: "Athlètes + frais du club", sub: "95% athlètes · 5% frais club" },
-                    ].map(opt => (
-                      <button key={opt.value} onClick={() => setDonationOption(opt.value)}
-                        className="w-full flex items-start gap-2.5 rounded-xl p-2.5 text-left border transition-all"
-                        style={{ background: donationOption === opt.value ? "rgba(0,158,190,0.06)" : "transparent", borderColor: donationOption === opt.value ? "#009EBE" : "#e5e7eb" }}>
-                        <span className="mt-0.5 flex-shrink-0 w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center"
-                          style={{ borderColor: donationOption === opt.value ? "#009EBE" : "#d1d5db" }}>
-                          {donationOption === opt.value && <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#009EBE" }} />}
-                        </span>
-                        <div>
-                          <p className="text-xs font-semibold text-foreground">{opt.label}</p>
-                          <p className="text-[10px] text-muted-foreground">{opt.sub}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Tier grid */}
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">Choisir votre niveau</p>
-                  <div className="grid grid-cols-2 gap-1.5 mb-3">
-                    {TIERS.map((t, i) => {
-                      const isSelected = donationType === "monthly" ? selectedTier === i : oneTimeAmount === t.amount;
-                      return (
-                        <button key={t.amount}
-                          onClick={() => donationType === "monthly" ? setSelectedTier(i) : setOneTimeAmount(t.amount)}
-                          className={`relative rounded-xl p-2.5 text-left border transition-all ${isSelected ? "border-[#009EBE] bg-[#009EBE]/5" : "border-border hover:border-[#009EBE]/30"}`}>
-                          {t.popular && <span className="absolute -top-1.5 -right-1.5 rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white" style={{ background: "#009EBE" }}>Populaire</span>}
-                          <div className="text-base mb-0.5">{t.icon}</div>
-                          <div className="font-bold text-foreground text-xs">{t.label}</div>
-                          <div className="text-[10px] text-muted-foreground">€{t.amount}{donationType === "monthly" ? "/mois" : " une fois"}</div>
-                          <div className="text-[10px] font-semibold mt-0.5" style={{ color: "#009EBE" }}>{t.advantages} avantage{t.advantages > 1 ? "s" : ""}</div>
-                          {donationOption === "club" && <div className="text-[9px] font-semibold mt-0.5" style={{ color: "#16a34a" }}>dont {clubShare(t.amount)}€ club</div>}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <button className="w-full inline-flex items-center justify-center gap-2 rounded-2xl py-3 font-bold text-sm text-white hover:opacity-90 hover:scale-[1.01] transition-all shadow-sm"
-                    style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}>
-                    <Heart className="w-4 h-4" />
-                    {donationType === "monthly" ? `Devenir supporter — €${tier.amount}/mois` : `Faire un don de €${oneTimeAmount}`}
-                  </button>
-                  <p className="text-center text-[10px] text-muted-foreground mt-2">
-                    {donationType === "monthly" ? "Annulable à tout moment · " : ""}Paiement sécurisé
-                  </p>
-                </div>
-              </motion.div>
+            {/* Logos */}
+            <div className="flex items-center gap-4 mb-7">
+              <FFCKLogo className="h-10 md:h-12 w-auto" />
+              <div className="w-px h-7 bg-white/20" />
+              <SupSportLogo className="h-5 w-auto" />
             </div>
-          </div>
+
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 text-xs font-semibold text-white/70 mb-6"
+              style={{ background: "rgba(255,255,255,0.08)" }}>
+              🏅 {CLUB.clubSupporters} supporters actifs · {ATHLETES.length} athlètes belges soutenus
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
+              Vous donnez.<br />
+              <span style={{ color: "#69C3D2" }}>Vous économisez.</span>
+            </h1>
+            <p className="text-white/65 text-base md:text-lg max-w-xl mb-8 leading-relaxed">
+              Soutenez le kayak belge et gagnez des remises exclusives chez nos {PARTNERS.length} partenaires sportifs.
+              Souvent, vous économisez <strong className="text-white">plus que vous ne donnez.</strong>
+            </p>
+
+            {/* La preuve en chiffres */}
+            <div className="flex items-stretch gap-3 md:gap-5 mb-9 w-full max-w-sm md:max-w-md">
+              {[
+                { val: "€25", label: "votre don/mois", color: "rgba(255,255,255,0.9)" },
+                { val: "→", label: "", color: "rgba(255,255,255,0.25)", small: true },
+                { val: "€70", label: "d'économies potentielles", color: "#69C3D2" },
+                { val: "=", label: "", color: "rgba(255,255,255,0.25)", small: true },
+                { val: "+€45", label: "dans la poche", color: "#4ade80" },
+              ].map((item, i) =>
+                item.small ? (
+                  <div key={i} className="flex items-center justify-center text-xl font-black" style={{ color: item.color }}>{item.val}</div>
+                ) : (
+                  <div key={i} className="flex-1 rounded-2xl py-3 px-2 text-center" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
+                    <div className="text-2xl md:text-3xl font-black" style={{ color: item.color }}>{item.val}</div>
+                    <div className="text-white/40 text-[10px] mt-0.5 leading-tight">{item.label}</div>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-8 w-full sm:w-auto">
+              <button onClick={() => scrollToSection(4)}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl px-7 py-3.5 font-bold text-base text-white hover:opacity-90 hover:scale-[1.02] transition-all shadow-xl"
+                style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}>
+                <Heart className="w-5 h-5" />
+                Je veux mes avantages
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button onClick={() => scrollToSection(1)}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 font-semibold text-sm text-white/80 hover:text-white hover:bg-white/10 transition-all border border-white/20">
+                Comment ça marche
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Progress bar */}
+            <div className="w-full max-w-sm">
+              <div className="flex justify-between text-xs text-white/40 mb-1.5">
+                <span>€{CLUB.clubRaised.toLocaleString("fr-BE")} collectés</span>
+                <span>Objectif €{CLUB.clubGoal.toLocaleString("fr-BE")}</span>
+              </div>
+              <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.12)" }}>
+                <motion.div className="h-1.5 rounded-full" style={{ background: "#69C3D2" }}
+                  initial={{ width: 0 }} animate={{ width: `${clubPct}%` }}
+                  transition={{ duration: 1.1, delay: 0.5, ease: "easeOut" }} />
+              </div>
+              <p className="text-center text-white/30 text-xs mt-1.5">{clubPct}% atteint · {CLUB.clubSupporters} supporters</p>
+            </div>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <button onClick={() => scrollToSection(1)}
+            className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/25 hover:text-white/60 transition-colors"
+            style={{ animation: "bounce 2s infinite" }}>
+            <ChevronDown className="w-7 h-7" />
+          </button>
         </section>
 
-        {/* ────────────────────────────────────────────────────────────
-            SECTION 2 — CONCEPT
-        ──────────────────────────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════════
+            S2 — COMMENT ÇA MARCHE
+        ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[1] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "hsl(195,100%,99%)" }}
           className="flex flex-col items-center justify-center overflow-y-auto md:overflow-hidden px-4"
         >
-          <div className="container mx-auto max-w-5xl py-6 md:py-0">
-            <motion.div className="text-center mb-7 md:mb-9" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="container mx-auto max-w-4xl py-6 md:py-0">
+            <motion.div className="text-center mb-8 md:mb-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold mb-4"
                 style={{ color: "#009EBE", borderColor: "rgba(0,158,190,0.2)", background: "rgba(0,158,190,0.08)" }}>
-                <Zap className="w-3.5 h-3.5" /> Concept gagnant-gagnant
+                <Zap className="w-3.5 h-3.5" /> Simple comme bonjour
               </span>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground mb-3">Vous donnez. Vous gagnez aussi.</h2>
-              <p className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto">En soutenant nos athlètes, vous accédez à des réductions exclusives chez nos partenaires sportifs. Votre don peut vous revenir dans la poche.</p>
+              <h2 className="text-2xl md:text-4xl font-black text-foreground">Comment ça marche ?</h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-7">
+            {/* 3 étapes */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
               {[
-                { step: "01", icon: <Heart className="w-5 h-5" style={{ color: "#009EBE" }} />, title: "Vous soutenez", desc: `Choisissez un don mensuel (€10–€25) ou unique. Votre argent est réparti entre nos ${ATHLETES.length} athlètes pour leurs compétitions, équipements et déplacements.` },
-                { step: "02", icon: <Gift className="w-5 h-5" style={{ color: "#009EBE" }} />, title: "Vous choisissez vos avantages", desc: `Sélectionnez 1 à 4 avantages parmi nos ${PARTNERS.length} partenaires sportifs — remises de 10% à 20%, fitness offert, coaching gratuit...` },
-                { step: "03", icon: <Trophy className="w-5 h-5" style={{ color: "#009EBE" }} />, title: "Tout le monde gagne", desc: "Vous économisez sur vos achats sportifs. Nos athlètes performent au plus haut niveau. Nos partenaires accèdent à une communauté sportive engagée." },
-              ].map((item, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                  className="rounded-2xl border border-border/50 bg-card p-5 relative overflow-hidden">
-                  <span className="absolute top-4 right-4 text-5xl font-black opacity-5">{item.step}</span>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "rgba(0,158,190,0.1)" }}>{item.icon}</div>
-                  <h3 className="font-bold text-foreground text-base mb-1.5">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                {
+                  n: "1", emoji: "💰",
+                  title: "Vous choisissez votre don",
+                  body: "€10, €15, €20 ou €25 par mois — ou un seul don unique. Annulable à tout moment.",
+                  color: "#009EBE",
+                },
+                {
+                  n: "2", emoji: "🎁",
+                  title: "Vous choisissez vos remises",
+                  body: `Selon votre niveau, vous choisissez 1 à 4 remises parmi nos ${PARTNERS.length} partenaires sportifs belges.`,
+                  color: "#009EBE",
+                },
+                {
+                  n: "3", emoji: "🎉",
+                  title: "Vous économisez — souvent plus que votre don",
+                  body: "Exemple : chaussures Trakks à €270 → €216 avec la remise. Don de €25. Économie nette : +€29.",
+                  color: "#009EBE",
+                  highlight: true,
+                },
+              ].map((step, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.12 }}
+                  className={`relative rounded-[1.5rem] border p-6 ${step.highlight ? "ring-2" : ""}`}
+                  style={{
+                    background: step.highlight ? "rgba(0,158,190,0.04)" : "white",
+                    borderColor: step.highlight ? "#009EBE" : "hsl(193,30%,88%)",
+                    ...(step.highlight ? { ringColor: "#009EBE" } : {}),
+                  }}>
+                  {/* Step number */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-black text-white flex-shrink-0"
+                      style={{ background: step.color }}>
+                      {step.n}
+                    </div>
+                    <span className="text-2xl">{step.emoji}</span>
+                  </div>
+                  <h3 className="font-black text-foreground text-lg mb-2 leading-snug">{step.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{step.body}</p>
+                  {step.highlight && (
+                    <div className="mt-4 rounded-xl p-3 text-sm font-bold text-center" style={{ background: "rgba(0,158,190,0.1)", color: "#009EBE" }}>
+                      +€29 dans la poche 🎉
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </div>
 
-            {/* XRUN sponsor banner */}
-            {SPONSORS.filter(s => s.tier === "gold").length > 0 && (
-              <div className="max-w-3xl mx-auto">
-                {SPONSORS.filter(s => s.tier === "gold").map(sponsor => (
-                  <GoldSponsorBanner key={sponsor.id} sponsor={sponsor} />
-                ))}
-              </div>
-            )}
+            {/* CTA */}
+            <div className="text-center">
+              <button onClick={() => scrollToSection(4)}
+                className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 font-bold text-base text-white hover:opacity-90 hover:scale-[1.01] transition-all shadow-lg"
+                style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}>
+                <Heart className="w-5 h-5" />
+                Devenir supporter
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <p className="text-muted-foreground text-xs mt-3">Dès €10/mois · annulable à tout moment</p>
+            </div>
           </div>
         </section>
 
-        {/* ────────────────────────────────────────────────────────────
-            SECTION 3 — AVANTAGES PARTENAIRES
-        ──────────────────────────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════════
+            S3 — AVANTAGES PARTENAIRES
+        ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[2] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(180deg,#003d50 0%,#005a70 100%)" }}
@@ -414,32 +396,33 @@ export default function ClubPage() {
           <div className="flex-shrink-0 container mx-auto px-4 pt-6 md:pt-8 pb-4">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-3">
               <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 mb-2"
+                  style={{ background: "rgba(255,255,255,0.08)" }}>
                   <Gift className="w-3.5 h-3.5" /> {PARTNERS.length} partenaires exclusifs
                 </span>
-                <h2 className="text-2xl md:text-3xl font-black text-white">Vos avantages partenaires</h2>
-                <p className="text-white/50 text-xs md:text-sm mt-0.5">En tant que supporter FFCK, accédez à ces réductions chez nos partenaires.</p>
+                <h2 className="text-2xl md:text-3xl font-black text-white">Vos remises partenaires</h2>
+                <p className="text-white/50 text-sm mt-0.5">Sélectionnez votre niveau pour voir les remises incluses</p>
               </div>
               {/* Tier selector */}
-              <div className="flex gap-2 overflow-x-auto pb-1 md:flex-shrink-0" style={{ scrollbarWidth: "none" }}>
+              <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
                 {TIERS.map((t, i) => (
                   <button key={t.amount} onClick={() => setSelectedTier(i)}
                     className={`relative flex-shrink-0 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all ${selectedTier === i ? "text-white scale-105" : "text-white/50 hover:text-white/75"}`}
                     style={{ background: selectedTier === i ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.07)", border: selectedTier === i ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.1)" }}>
                     {t.popular && <span className="absolute -top-1.5 -right-1.5 rounded-full px-1.5 py-0.5 text-[9px] font-bold" style={{ background: "#69C3D2", color: "#003d50" }}>Top</span>}
-                    {t.icon} {t.label} · {t.advantages}✓
+                    {t.icon} {t.label} · {t.advantages} remise{t.advantages > 1 ? "s" : ""}
                   </button>
                 ))}
               </div>
             </div>
             <p className="text-white/40 text-xs">
-              Niveau <strong className="text-white/65">{tier.label}</strong> — cliquez pour sélectionner vos {tier.advantages} avantage{tier.advantages > 1 ? "s" : ""}
-              {activePartners.length > 0 && <span style={{ color: "#69C3D2" }}> · {activePartners.length}/{tier.advantages} sélectionné{activePartners.length > 1 ? "s" : ""}</span>}
+              Niveau <strong className="text-white/65">{tier.label}</strong> (€{tier.amount}/mois) — cliquez sur vos remises préférées
+              {activePartners.length > 0 && <span style={{ color: "#69C3D2" }}> · {activePartners.length}/{tier.advantages} sélectionnée{activePartners.length > 1 ? "s" : ""}</span>}
             </p>
           </div>
 
           {/* Scrollable grid */}
-          <div className="flex-1 overflow-y-auto container mx-auto px-4 pb-2" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.15) transparent" }}>
+          <div className="flex-1 overflow-y-auto container mx-auto px-4 pb-2" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.12) transparent" }}>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5">
               {PARTNERS.map((p, i) => {
                 const selected = activePartners.includes(i);
@@ -478,25 +461,24 @@ export default function ClubPage() {
 
           {/* CTA */}
           <div className="flex-shrink-0 container mx-auto px-4 py-3 text-center">
-            <button onClick={() => scrollToSection(0)}
+            <button onClick={() => scrollToSection(4)}
               className="inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 font-bold text-sm hover:opacity-90 hover:scale-[1.01] transition-all shadow-lg"
               style={{ background: "#69C3D2", color: "#003d50" }}>
               <Heart className="w-4 h-4" />
-              Accéder à ces avantages — dès €10/mois
+              Accéder à ces remises — dès €10/mois
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </section>
 
-        {/* ────────────────────────────────────────────────────────────
-            SECTION 4 — ATHLÈTES
-        ──────────────────────────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════════
+            S4 — ATHLÈTES
+        ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[3] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "hsl(195,100%,99%)" }}
           className="flex flex-col overflow-hidden"
         >
-          {/* Header */}
           <div className="flex-shrink-0 container mx-auto px-4 pt-6 md:pt-8 pb-4">
             <div className="flex items-end justify-between">
               <div>
@@ -509,11 +491,12 @@ export default function ClubPage() {
             </div>
           </div>
 
-          {/* Scrollable grid */}
           <div className="flex-1 overflow-y-auto container mx-auto px-4 pb-4" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(0,0,0,0.1) transparent" }}>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {ATHLETES.map((a, i) => (
-                <motion.div key={a.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: i * 0.06 }}
+                <motion.div key={a.id}
+                  initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: i * 0.06 }}
                   onClick={() => navigate(`/athlete/${a.id}`)}
                   className="overflow-hidden rounded-2xl border border-border/50 bg-card hover:shadow-[0_16px_48px_rgba(0,158,190,0.15)] transition-all duration-500 hover:-translate-y-1 cursor-pointer group">
                   <div className="relative h-44 sm:h-48 overflow-hidden">
@@ -551,81 +534,122 @@ export default function ClubPage() {
           </div>
         </section>
 
-        {/* ────────────────────────────────────────────────────────────
-            SECTION 5 — TRANSPARENCE
-        ──────────────────────────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════════
+            S5 — SOUTENIR (donation form — section dédiée)
+        ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[4] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H }}
-          className="flex flex-col items-center justify-center overflow-y-auto md:overflow-hidden px-4"
+          className="relative flex items-center justify-center overflow-y-auto md:overflow-hidden px-4"
         >
-          <div className="container mx-auto max-w-5xl py-6 md:py-0">
-            <div className="rounded-[2rem] overflow-hidden border border-border/50">
-              <div className="px-5 py-4 md:px-8 md:py-5" style={{ background: "linear-gradient(135deg,#003d50 0%,#009EBE 100%)" }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                    <Target className="w-5 h-5 text-white" />
-                  </div>
+          {/* Background dégradé léger */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg,#003d50 0%,#006880 100%)" }} />
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-[130px] pointer-events-none opacity-15" style={{ background: "#69C3D2" }} />
+
+          <div className="relative z-10 w-full max-w-lg py-6 md:py-0">
+
+            {/* Titre de section */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl md:text-3xl font-black text-white mb-1">Rejoignez les {CLUB.clubSupporters} supporters</h2>
+              <p className="text-white/60 text-sm">Annulable à tout moment · Paiement sécurisé</p>
+            </div>
+
+            {/* Donation card */}
+            <div className="rounded-[1.5rem] bg-white p-5 md:p-7 shadow-[0_30px_80px_rgba(0,0,0,0.4)]">
+
+              {/* Progress */}
+              <div className="mb-5">
+                <div className="flex justify-between items-end mb-2">
                   <div>
-                    <h2 className="text-white font-black text-xl md:text-2xl">Votre argent — où va-t-il ?</h2>
-                    <p className="text-white/60 text-xs md:text-sm mt-0.5">Transparence totale sur l'utilisation des fonds</p>
+                    <span className="text-2xl font-black text-foreground">€{CLUB.clubRaised.toLocaleString("fr-BE")}</span>
+                    <span className="text-muted-foreground text-xs ml-1">/ €{CLUB.clubGoal.toLocaleString("fr-BE")} objectif</span>
                   </div>
+                  <span className="font-bold text-sm" style={{ color: "#009EBE" }}>{clubPct}%</span>
+                </div>
+                <AnimBar pct={clubPct} delay={0.3} />
+                <div className="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
+                  <Users className="w-3 h-3" />{ATHLETES.length} athlètes financés · {CLUB.clubSupporters} supporters
                 </div>
               </div>
-              <div className="bg-card p-5 md:p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground mb-4">Répartition des fonds</h3>
-                    {[
-                      { label: "Frais de compétition & inscriptions", pct: 40, detail: "Championnats de Belgique, Coupes du Monde ICF, Championnats d'Europe" },
-                      { label: "Équipement (kayaks, pagaies, combinaisons)", pct: 30, detail: "Kayaks de compétition carbone, pagaies, équipement de sécurité" },
-                      { label: "Déplacements & hébergements", pct: 20, detail: "Transports vers les compétitions européennes, hébergements" },
-                      { label: "Entraînements & coaching", pct: 10, detail: "Stages de préparation, coaching technique et mental" },
-                    ].map((item, i) => (
-                      <div key={i} className="mb-4">
-                        <div className="flex justify-between text-xs md:text-sm mb-1">
-                          <span className="font-medium text-foreground">{item.label}</span>
-                          <span className="font-bold flex-shrink-0 ml-2" style={{ color: "#009EBE" }}>{item.pct}%</span>
-                        </div>
-                        <AnimBar pct={item.pct} delay={0.3 + i * 0.1} />
-                        <p className="text-xs text-muted-foreground mt-0.5">{item.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground mb-4">Nos engagements</h3>
-                    <div className="space-y-2.5">
-                      {[
-                        { icon: "✅", text: "100% des fonds vont directement aux athlètes — zéro commission de gestion" },
-                        { icon: "📊", text: "Rapport financier annuel disponible pour tous les supporters" },
-                        { icon: "⚖️", text: "Budget réparti selon les besoins de chaque athlète et discipline" },
-                        { icon: "🔍", text: "Suivi en temps réel de la collecte sur cette page" },
-                        { icon: "🏆", text: "Priorité aux compétitions internationales (ChEuro, Coupes du Monde ICF)" },
-                        { icon: "💬", text: "Newsletter mensuelle sur les résultats de vos athlètes" },
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-start gap-2.5 p-3 rounded-xl" style={{ background: "rgba(0,158,190,0.04)", border: "1px solid rgba(0,158,190,0.08)" }}>
-                          <span className="text-sm flex-shrink-0">{item.icon}</span>
-                          <p className="text-xs text-foreground/80 leading-relaxed">{item.text}</p>
-                        </div>
-                      ))}
+
+              {/* Don type */}
+              <div className="flex rounded-xl overflow-hidden border border-border mb-4">
+                {(["monthly", "once"] as const).map(type => (
+                  <button key={type} onClick={() => setDonationType(type)}
+                    className={`flex-1 py-2.5 text-sm font-semibold transition-all ${donationType === type ? "text-white" : "text-muted-foreground"}`}
+                    style={{ background: donationType === type ? "#009EBE" : "transparent" }}>
+                    {type === "monthly" ? "🔄 Mensuel" : "💳 Don unique"}
+                  </button>
+                ))}
+              </div>
+
+              {/* Répartition */}
+              <div className="mb-4 space-y-1.5">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Répartition de votre don</p>
+                {[
+                  { value: "athlete" as const, label: "Cagnotte des athlètes", sub: "100% versé dans la cagnotte collective, répartie entre tous nos athlètes" },
+                  { value: "club" as const, label: "Athlètes + frais du club", sub: "95% cagnotte athlètes · 5% frais de fonctionnement du club" },
+                ].map(opt => (
+                  <button key={opt.value} onClick={() => setDonationOption(opt.value)}
+                    className="w-full flex items-start gap-3 rounded-xl p-3 text-left border transition-all"
+                    style={{ background: donationOption === opt.value ? "rgba(0,158,190,0.06)" : "transparent", borderColor: donationOption === opt.value ? "#009EBE" : "#e5e7eb" }}>
+                    <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center"
+                      style={{ borderColor: donationOption === opt.value ? "#009EBE" : "#d1d5db" }}>
+                      {donationOption === opt.value && <span className="w-2 h-2 rounded-full" style={{ background: "#009EBE" }} />}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{opt.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{opt.sub}</p>
                     </div>
-                  </div>
-                </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Tier grid */}
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Choisir votre niveau</p>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {TIERS.map((t, i) => {
+                  const isSelected = donationType === "monthly" ? selectedTier === i : oneTimeAmount === t.amount;
+                  return (
+                    <button key={t.amount}
+                      onClick={() => donationType === "monthly" ? setSelectedTier(i) : setOneTimeAmount(t.amount)}
+                      className={`relative rounded-xl p-3 text-left border transition-all ${isSelected ? "border-[#009EBE] bg-[#009EBE]/5" : "border-border hover:border-[#009EBE]/30"}`}>
+                      {t.popular && <span className="absolute -top-2 -right-2 rounded-full px-2 py-0.5 text-[10px] font-bold text-white" style={{ background: "#009EBE" }}>Populaire</span>}
+                      <div className="text-lg mb-1">{t.icon}</div>
+                      <div className="font-bold text-foreground text-sm">{t.label}</div>
+                      <div className="text-xs text-muted-foreground">€{t.amount}{donationType === "monthly" ? "/mois" : " une fois"}</div>
+                      <div className="text-xs font-semibold mt-1" style={{ color: "#009EBE" }}>{t.advantages} remise{t.advantages > 1 ? "s" : ""} incluse{t.advantages > 1 ? "s" : ""}</div>
+                      {donationOption === "club" && <div className="text-xs font-semibold mt-0.5" style={{ color: "#16a34a" }}>dont {clubShare(t.amount)}€ pour le club</div>}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button className="w-full inline-flex items-center justify-center gap-2 rounded-2xl py-4 font-bold text-base text-white hover:opacity-90 hover:scale-[1.01] transition-all shadow-sm"
+                style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}>
+                <Heart className="w-5 h-5" />
+                {donationType === "monthly" ? `Devenir supporter — €${tier.amount}/mois` : `Faire un don de €${oneTimeAmount}`}
+              </button>
+
+              {/* Sponsor XRUN compact */}
+              <div className="mt-4">
+                {SPONSORS.filter(s => s.tier === "gold").map(s => (
+                  <GoldSponsorBanner key={s.id} sponsor={s} />
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ────────────────────────────────────────────────────────────
-            SECTION 6 — CONTACT / FOOTER
-        ──────────────────────────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════════
+            S6 — CONTACT / FOOTER
+        ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[5] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "#003d50" }}
           className="flex flex-col items-center justify-center text-white overflow-y-auto md:overflow-hidden px-4"
         >
           <div className="container mx-auto max-w-4xl py-6 md:py-0">
-            {/* Logo */}
             <div className="text-center mb-8 md:mb-10">
               <FFCKLogo className="h-12 w-auto mx-auto mb-3" />
               <p className="text-white/35 text-sm">{CLUB.fullName}<br />{CLUB.location} · Fondée en {CLUB.founded}</p>
@@ -644,7 +668,6 @@ export default function ClubPage() {
                   ))}
                 </ul>
               </div>
-
               <div className="text-center md:text-left">
                 <h4 className="font-semibold mb-4 text-white/60 text-xs uppercase tracking-wide">Nos partenaires</h4>
                 <ul className="space-y-2 text-sm text-white/40">
@@ -656,7 +679,6 @@ export default function ClubPage() {
                   {PARTNERS.length > 6 && <li className="text-white/25 text-xs">+{PARTNERS.length - 6} autres partenaires...</li>}
                 </ul>
               </div>
-
               <div className="text-center md:text-left">
                 <h4 className="font-semibold mb-4 text-white/60 text-xs uppercase tracking-wide">Contact</h4>
                 <ul className="space-y-2 text-sm text-white/40">
@@ -670,8 +692,8 @@ export default function ClubPage() {
                 <div className="mt-5 flex items-center gap-2 text-white/25 text-xs justify-center md:justify-start">
                   <ShieldCheck className="w-4 h-4" /> Paiements sécurisés via Stripe
                 </div>
-                <div className="mt-3">
-                  <button onClick={() => scrollToSection(0)}
+                <div className="mt-4">
+                  <button onClick={() => scrollToSection(4)}
                     className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-bold text-white hover:opacity-90 transition-all"
                     style={{ background: "#009EBE" }}>
                     <Heart className="w-4 h-4" /> Soutenir maintenant
@@ -693,18 +715,18 @@ export default function ClubPage() {
 
       </div>{/* end scroll container */}
 
-      {/* ══ NAV DOTS (desktop) ════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════════
+          NAV DOTS (desktop right side)
+      ══════════════════════════════════════════════════════════════ */}
       <div className="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-3 p-2 rounded-full"
         style={{ background: "rgba(0,0,0,0.12)", backdropFilter: "blur(8px)" }}>
         {SECTION_NAMES.map((label, i) => (
           <button key={label} onClick={() => scrollToSection(i)} title={label}
             className="relative group flex items-center gap-2 justify-end">
-            {/* Tooltip */}
             <span className="absolute right-6 opacity-0 group-hover:opacity-100 transition-opacity text-[11px] font-medium px-2 py-1 rounded-lg whitespace-nowrap pointer-events-none"
               style={{ background: "rgba(0,40,55,0.95)", color: "rgba(255,255,255,0.85)" }}>
               {label}
             </span>
-            {/* Dot */}
             <span className={`block rounded-full transition-all duration-300 flex-shrink-0 ${activeSection === i ? "w-3 h-3" : "w-2 h-2"}`}
               style={{
                 background: activeSection === i ? "#009EBE" : "rgba(255,255,255,0.35)",
