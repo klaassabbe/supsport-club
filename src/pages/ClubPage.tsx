@@ -94,9 +94,9 @@ const SUPPORT_TIERS = [
     impactLine: "2h d'entraînement financées par mois",
     popular: false,
     features: [
-      "1 remise partenaire au choix",
-      "Accès au suivi des athlètes",
-      "Newsletter mensuelle",
+      "Vous savez exactement où vont vos €",
+      "1 remise partenaire — économies immédiates",
+      "Vivez leur saison en temps réel",
     ],
     accentFrom: "#006880", accentTo: "#003d50",
   },
@@ -105,10 +105,10 @@ const SUPPORT_TIERS = [
     impactLine: "1 séance de kiné couverte par mois",
     popular: true,
     features: [
-      "4 remises partenaires au choix",
-      "Économies jusqu'à +€45 / mois",
-      "Invitation aux événements du club",
-      "Rapport mensuel personnalisé",
+      "Récupérez plus que votre don en remises",
+      "Économies jusqu'à +€45 / mois — net positif",
+      "Vous êtes invité quand ils gagnent",
+      "Votre impact, chiffres à l'appui chaque mois",
     ],
     accentFrom: "#009EBE", accentTo: "#005a70",
   },
@@ -117,10 +117,10 @@ const SUPPORT_TIERS = [
     impactLine: "1 déplacement en compétition financé",
     popular: false,
     features: [
-      "Toutes les remises partenaires",
-      "Badge Elite visible sur le site",
-      "Accès prioritaire aux événements",
-      "Rapport analytics complet",
+      "Toutes les remises — économies maximales",
+      "Votre nom affiché à côté de leur victoire",
+      "Accès prioritaire à tous les événements",
+      "Rapport complet de votre impact réel",
     ],
     accentFrom: "#005a70", accentTo: "#002d3e",
   },
@@ -138,6 +138,10 @@ const BADGE_COLORS: Record<string, string> = {
 // 0 Accueil | 1 Comment | 2 Pourquoi | 3 Avantages | 4 Athlètes | 5 Soutenir | 6 Contact
 const SECTION_NAMES = ["Accueil", "Comment", "Pourquoi", "Avantages", "Athlètes", "Soutenir", "Contact"];
 const SECTION_H = "calc(100dvh - 4rem)";
+
+// Prochain championnat — crée l'urgence temporelle
+const NEXT_CHAMPIONSHIP = { label: "Championnats d'Europe", date: new Date("2026-04-24") };
+const daysLeft = Math.max(0, Math.ceil((NEXT_CHAMPIONSHIP.date.getTime() - Date.now()) / 86_400_000));
 
 // ── Helpers ────────────────────────────────────────────────────────
 function FFCKLogo({ className = "" }: { className?: string }) {
@@ -177,6 +181,7 @@ export default function ClubPage() {
   const [activePartners, setActivePartners]   = useState<number[]>([]);
   const [menuOpen, setMenuOpen]               = useState(false);
   const [selectedSupport, setSelectedSupport] = useState(1);
+  const [isMobile, setIsMobile]               = useState(() => window.innerWidth < 768);
 
   const tier        = TIERS[selectedTier];
   const clubPct     = Math.round((CLUB.clubRaised / CLUB.clubGoal) * 100);
@@ -209,6 +214,14 @@ export default function ClubPage() {
     container.addEventListener("scroll", onScroll, { passive: true });
     return () => container.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handler, { passive: true });
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  const snapSectionStyle = isMobile ? {} : { scrollSnapAlign: "start" as const };
 
   return (
     <div className="h-[100dvh] flex flex-col overflow-hidden">
@@ -288,7 +301,7 @@ export default function ClubPage() {
         ref={scrollRef}
         className="flex-1 overflow-y-scroll"
         style={{
-          scrollSnapType: "y mandatory",
+          scrollSnapType: isMobile ? "none" : "y mandatory",
           overscrollBehaviorY: "contain",
           WebkitOverflowScrolling: "touch" as never,
         }}
@@ -299,7 +312,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[0] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(135deg,#003d50 0%,#006880 60%,#009EBE 100%)" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "linear-gradient(135deg,#003d50 0%,#006880 60%,#009EBE 100%)" }}
           className="relative flex flex-col items-center justify-center text-center overflow-hidden px-5"
         >
           <div className="absolute top-0 right-0 w-72 md:w-[500px] h-72 md:h-[500px] rounded-full blur-[100px] md:blur-[130px] pointer-events-none opacity-20" style={{ background: "#69C3D2" }} />
@@ -331,7 +344,7 @@ export default function ClubPage() {
             </p>
 
             {/* Cagnotte */}
-            <div className="w-full max-w-sm rounded-2xl p-4 mb-5 border border-white/15"
+            <div className="w-full max-w-sm rounded-2xl p-4 mb-3 border border-white/15"
               style={{ background: "rgba(255,255,255,0.09)" }}>
               <div className="flex items-end justify-between mb-1.5">
                 <div>
@@ -349,6 +362,27 @@ export default function ClubPage() {
                   <Users className="w-3 h-3" /> {CLUB.clubSupporters} supporters
                 </span>
                 <span className="font-semibold" style={{ color: "#FF3800" }}>Il manque €{clubMissing.toLocaleString("fr-BE")}</span>
+              </div>
+              {daysLeft <= 60 && (
+                <div className="mt-2 pt-2 border-t border-white/10 flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: "#FF3800" }}>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: "#FF3800" }} />
+                  {NEXT_CHAMPIONSHIP.label} · {daysLeft <= 0 ? "c'est maintenant !" : daysLeft === 1 ? "demain !" : `dans ${daysLeft} jour${daysLeft > 1 ? "s" : ""}`}
+                </div>
+              )}
+            </div>
+
+            {/* Testimonial */}
+            <div className="w-full max-w-sm rounded-xl px-4 py-3 mb-4 flex items-start gap-3 text-left"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0"
+                style={{ background: "rgba(105,195,210,0.25)", border: "1px solid rgba(105,195,210,0.3)" }}>
+                X
+              </div>
+              <div className="min-w-0">
+                <p className="text-white/70 text-xs leading-relaxed italic">
+                  "€25/mois, j'ai économisé €180 en 3 mois chez Trakks. Et les athlètes sourient."
+                </p>
+                <p className="text-white/35 text-[10px] mt-1 font-medium">Xavier D. · supporter depuis janvier 2026</p>
               </div>
             </div>
 
@@ -368,7 +402,13 @@ export default function ClubPage() {
               </button>
             </div>
 
-            <p className="mt-4 text-white/35 text-xs">
+            {/* Réassurance */}
+            <p className="mt-2.5 text-white/35 text-[11px] flex items-center justify-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0" />
+              Paiement sécurisé · Annulable à tout moment · 100% reversé aux athlètes
+            </p>
+
+            <p className="mt-1.5 text-white/25 text-xs">
               Et économisez jusqu'à{" "}
               <span className="font-semibold" style={{ color: "#69C3D2" }}>+€45 / mois</span>
               {" "}chez nos {PARTNERS.length} partenaires
@@ -387,7 +427,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[1] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "hsl(195,100%,99%)" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "hsl(195,100%,99%)" }}
           className="flex flex-col overflow-y-auto"
         >
           <div className="container mx-auto max-w-4xl px-4 py-7 flex flex-col min-h-full">
@@ -463,7 +503,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[2] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(180deg,#003d50 0%,#005a70 100%)" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "linear-gradient(180deg,#003d50 0%,#005a70 100%)" }}
           className="flex flex-col overflow-hidden"
         >
           <div className="flex-shrink-0 container mx-auto px-4 pt-6 md:pt-8 pb-4">
@@ -527,7 +567,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[3] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(180deg,#003d50 0%,#005a70 100%)" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "linear-gradient(180deg,#003d50 0%,#005a70 100%)" }}
           className="flex flex-col overflow-hidden"
         >
           <div className="flex-shrink-0 container mx-auto px-4 pt-6 md:pt-8 pb-3">
@@ -614,7 +654,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[4] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "hsl(195,100%,99%)" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "hsl(195,100%,99%)" }}
           className="flex flex-col overflow-hidden"
         >
           <div className="flex-shrink-0 container mx-auto px-4 pt-6 md:pt-8 pb-3">
@@ -680,7 +720,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[5] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(135deg,#003d50 0%,#006880 100%)" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "linear-gradient(135deg,#003d50 0%,#006880 100%)" }}
           className="flex flex-col overflow-hidden"
         >
           <div className="flex-shrink-0 px-4 pt-6 pb-4 text-center container mx-auto">
@@ -791,7 +831,7 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[6] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "#003d50" }}
+          style={{ ...snapSectionStyle, height: SECTION_H, background: "#003d50" }}
           className="flex flex-col items-center justify-center text-white overflow-y-auto px-4"
         >
           <div className="container mx-auto max-w-4xl py-8">
