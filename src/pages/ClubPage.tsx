@@ -219,8 +219,16 @@ export default function ClubPage() {
       <header className="flex-shrink-0 relative z-50 border-b border-white/10 bg-[#003d50]/95 backdrop-blur-xl"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <button onClick={() => scrollToSection(0)}>
-            <FFCKLogo className="h-9 md:h-12 w-auto" />
+          <button onClick={() => scrollToSection(0)} className="flex flex-col items-start gap-0">
+            <FFCKLogo className="h-9 md:h-10 w-auto" />
+            <span className="hidden md:block text-[9px] text-white/30 font-medium tracking-wide leading-none mt-0.5">
+              Plateforme de soutien · partenaire de{" "}
+              <a href="https://www.ffckayak.be" target="_blank" rel="noopener noreferrer"
+                className="text-white/45 hover:text-white/70 transition-colors underline underline-offset-2"
+                onClick={e => e.stopPropagation()}>
+                ffckayak.be
+              </a>
+            </span>
           </button>
 
           <nav className="hidden md:flex items-center gap-5 text-sm font-medium">
@@ -299,20 +307,27 @@ export default function ClubPage() {
           <motion.div className="relative z-10 flex flex-col items-center w-full max-w-2xl"
             initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
 
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-3">
               <FFCKLogo className="h-8 md:h-11 w-auto" />
               <div className="w-px h-6 bg-white/20" />
               <SupSportLogo className="h-4 md:h-5 w-auto opacity-70" />
             </div>
+
+            <a href="https://www.ffckayak.be" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-medium text-white/45 border border-white/12 mb-5 hover:border-white/30 hover:text-white/65 transition-all"
+              style={{ background: "rgba(255,255,255,0.05)" }}>
+              <ExternalLink className="w-2.5 h-2.5" />
+              Fédération Francophone de Canoë-Kayak · ffckayak.be
+            </a>
 
             <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl font-black text-white leading-tight mb-2">
               Devenez acteur de leur victoire.<br />
               <span style={{ color: "#69C3D2" }}>Profitez-en aussi.</span>
             </h1>
             <p className="text-white/60 text-sm md:text-base max-w-md mb-5 leading-relaxed">
-              {ATHLETES.length} athlètes belges de kayak financent leur saison{" "}
+              {ATHLETES.length} athlètes FFC Kayak financent leurs championnats{" "}
               <strong className="text-white">de leur propre poche</strong> —
-              championnats, matériel, kiné. Aidez-les à y aller.
+              Europe, Monde, matériel, kiné. Aidez-les à y aller.
             </p>
 
             {/* Cagnotte */}
@@ -333,7 +348,7 @@ export default function ClubPage() {
                 <span className="flex items-center gap-1 text-white/45">
                   <Users className="w-3 h-3" /> {CLUB.clubSupporters} supporters
                 </span>
-                <span className="text-white/55">Il manque €{clubMissing.toLocaleString("fr-BE")}</span>
+                <span className="font-semibold" style={{ color: "#FF3800" }}>Il manque €{clubMissing.toLocaleString("fr-BE")}</span>
               </div>
             </div>
 
@@ -477,7 +492,7 @@ export default function ClubPage() {
                   }}>
                   {cost.highlight && (
                     <div className="absolute top-0 right-0 rounded-bl-xl rounded-tr-2xl px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-white"
-                      style={{ background: "#009EBE" }}>
+                      style={{ background: "#FF3800" }}>
                       Poste le plus élevé
                     </div>
                   )}
@@ -676,7 +691,7 @@ export default function ClubPage() {
             <div className="max-w-xs mx-auto mb-4">
               <div className="flex justify-between text-[11px] text-white/40 mb-1.5">
                 <span>€{CLUB.clubRaised.toLocaleString("fr-BE")} collectés</span>
-                <span>Il manque €{clubMissing.toLocaleString("fr-BE")}</span>
+                <span className="font-semibold" style={{ color: "#FF3800" }}>Il manque €{clubMissing.toLocaleString("fr-BE")}</span>
               </div>
               <AnimBar pct={clubPct} delay={0.2} height="h-1.5" />
               <p className="text-white/25 text-[10px] mt-1">{clubPct}% atteint · {CLUB.clubSupporters} supporters</p>
@@ -782,7 +797,13 @@ export default function ClubPage() {
           <div className="container mx-auto max-w-4xl py-8">
             <div className="text-center mb-7">
               <FFCKLogo className="h-10 w-auto mx-auto mb-2.5" />
-              <p className="text-white/35 text-sm">{CLUB.fullName}<br />{CLUB.location} · Fondée en {CLUB.founded}</p>
+              <p className="text-white/35 text-sm">{CLUB.fullName}</p>
+              <a href="https://www.ffckayak.be" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-1.5 text-xs font-medium transition-colors hover:text-white/70"
+                style={{ color: "#69C3D2" }}>
+                ffckayak.be <ExternalLink className="w-3 h-3" />
+              </a>
+              <p className="text-white/20 text-xs mt-1">{CLUB.location} · Fondée en {CLUB.founded}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
