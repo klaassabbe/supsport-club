@@ -306,8 +306,8 @@ export default function ClubPage() {
             </div>
 
             <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl font-black text-white leading-tight mb-2">
-              Financez la performance.<br />
-              <span style={{ color: "#69C3D2" }}>Recevez des avantages.</span>
+              Devenez acteur de leur victoire.<br />
+              <span style={{ color: "#69C3D2" }}>Profitez-en aussi.</span>
             </h1>
             <p className="text-white/60 text-sm md:text-base max-w-md mb-5 leading-relaxed">
               {ATHLETES.length} athlètes belges de kayak financent leur saison{" "}
