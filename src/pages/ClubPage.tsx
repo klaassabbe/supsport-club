@@ -3,7 +3,7 @@ import {
   MapPin, Users, Heart, ExternalLink, Award,
   ChevronRight, ChevronDown, CheckCircle, Star,
   Gift, Zap, ShieldCheck, ArrowRight,
-  Menu, X,
+  Menu, X, AlertTriangle,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,58 @@ const CLUB = {
   clubSupporters: 143,
 };
 
+// ── Coûts réels d'un athlète (section Pourquoi) ───────────────────
+const ATHLETE_COSTS = [
+  {
+    emoji: "🏆",
+    label: "Championnats d'Europe",
+    detail: "Inscription + vol + hébergement sur place",
+    amount: "~€1 200",
+    amountRaw: 1200,
+    highlight: false,
+  },
+  {
+    emoji: "🌍",
+    label: "Championnats du Monde",
+    detail: "Inscription + vols internationaux + hébergement 7-10 jours",
+    amount: "~€2 800",
+    amountRaw: 2800,
+    highlight: true,
+  },
+  {
+    emoji: "🛶",
+    label: "Kayak de compétition",
+    detail: "Coque carbone homologuée compétition (renouvelé tous les 3-5 ans)",
+    amount: "€3 000 – €7 000",
+    amountRaw: 5000,
+    highlight: false,
+  },
+  {
+    emoji: "🪶",
+    label: "Pagaie carbone",
+    detail: "Pagaie technique carbone, personnalisée selon la discipline",
+    amount: "€400 – €800",
+    amountRaw: 600,
+    highlight: false,
+  },
+  {
+    emoji: "⛰️",
+    label: "Stages de préparation",
+    detail: "Stage altitude, stages techniques, camps d'entraînement",
+    amount: "~€900/an",
+    amountRaw: 900,
+    highlight: false,
+  },
+  {
+    emoji: "💆",
+    label: "Kiné & récupération",
+    detail: "Suivi médical, ostéo, récupération musculaire régulière",
+    amount: "~€120/mois",
+    amountRaw: 1440,
+    highlight: false,
+  },
+];
+
 // ── Partners ──────────────────────────────────────────────────────
 const PARTNERS = [
   { name: "Trakks", category: "Running & Outdoor", icon: "👟", shortDiscount: "-20%", fullDesc: "20% sur les vêtements et chaussures (hors accessoires, nutrition, librairie et électro, non cumulable avec d'autres promotions).", url: "https://www.trakks.be" },
@@ -39,77 +91,65 @@ const PARTNERS = [
   { name: "Spa Racing", category: "Équipement auto", icon: "🏎️", shortDiscount: "-12%", fullDesc: "12% à partir de 150€ d'achat en magasin.", url: "https://sparacing.com/" },
 ];
 
-// ── Tiers (section Avantages S3) ──────────────────────────────────
+// ── Tiers (section Avantages) ─────────────────────────────────────
 const TIERS = [
-  { amount: 10, label: "Supporter", advantages: 1, icon: "❤️", popular: false },
-  { amount: 15, label: "Fan",        advantages: 2, icon: "⭐", popular: false },
+  { amount: 10, label: "Supporter",   advantages: 1, icon: "❤️", popular: false },
+  { amount: 15, label: "Fan",         advantages: 2, icon: "⭐", popular: false },
   { amount: 20, label: "Ambassadeur", advantages: 3, icon: "📸", popular: false },
-  { amount: 25, label: "Champion",  advantages: 4, icon: "🏅", popular: true },
+  { amount: 25, label: "Champion",    advantages: 4, icon: "🏅", popular: true },
 ];
 
-// ── Paliers de soutien (S5 — cartes d'engagement) ─────────────────
+// ── Paliers de soutien (Section Soutenir) ─────────────────────────
 const SUPPORT_TIERS = [
   {
-    amount: 10,
-    label: "Supporter",
-    icon: "❤️",
+    amount: 10, label: "Supporter", icon: "❤️",
     impactLine: "= 2h d'entraînement financées / mois",
-    remises: 1,
-    popular: false,
+    remises: 1, popular: false,
     features: [
       "1 remise partenaire au choix",
       "Accès au suivi des athlètes",
       "Newsletter mensuelle",
     ],
-    accentFrom: "#009EBE",
-    accentTo: "#006880",
+    accentFrom: "#009EBE", accentTo: "#006880",
   },
   {
-    amount: 25,
-    label: "Champion",
-    icon: "🏅",
+    amount: 25, label: "Champion", icon: "🏅",
     impactLine: "= 1 séance de kiné couverte / mois",
-    remises: 4,
-    popular: true,
+    remises: 4, popular: true,
     features: [
       "4 remises partenaires au choix",
       "Économies jusqu'à +€45 / mois",
       "Invitation aux événements du club",
       "Rapport mensuel personnalisé",
     ],
-    accentFrom: "#009EBE",
-    accentTo: "#003d50",
+    accentFrom: "#009EBE", accentTo: "#003d50",
   },
   {
-    amount: 50,
-    label: "Elite",
-    icon: "🏆",
+    amount: 50, label: "Elite", icon: "🏆",
     impactLine: "= 1 déplacement en compétition financé",
-    remises: 13,
-    popular: false,
+    remises: 13, popular: false,
     features: [
       "Toutes les remises partenaires",
       "Badge Elite visible sur le site",
       "Meet & greet athlètes",
       "Rapport analytics complet",
     ],
-    accentFrom: "#e85d04",
-    accentTo: "#c04a00",
+    accentFrom: "#e85d04", accentTo: "#c04a00",
   },
 ];
 
 const BADGE_COLORS: Record<string, string> = {
-  Elite: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  Elite:     "bg-yellow-100 text-yellow-800 border-yellow-200",
   Nationale: "bg-blue-100 text-blue-800 border-blue-200",
-  National: "bg-blue-100 text-blue-800 border-blue-200",
-  Espoir: "bg-green-100 text-green-800 border-green-200",
-  Junior: "bg-pink-100 text-pink-800 border-pink-200",
-  Aventure: "bg-orange-100 text-orange-800 border-orange-200",
+  National:  "bg-blue-100 text-blue-800 border-blue-200",
+  Espoir:    "bg-green-100 text-green-800 border-green-200",
+  Junior:    "bg-pink-100 text-pink-800 border-pink-200",
+  Aventure:  "bg-orange-100 text-orange-800 border-orange-200",
 };
 
-const SECTION_NAMES = ["Accueil", "Comment", "Avantages", "Athlètes", "Soutenir", "Contact"];
-
-// dvh = dynamic viewport height → tient compte de la barre d'URL mobile
+// Section index map:
+// 0 Accueil | 1 Comment | 2 Pourquoi | 3 Avantages | 4 Athlètes | 5 Soutenir | 6 Contact
+const SECTION_NAMES = ["Accueil", "Comment", "Pourquoi", "Avantages", "Athlètes", "Soutenir", "Contact"];
 const SECTION_H = "calc(100dvh - 4rem)";
 
 // ── Helpers ────────────────────────────────────────────────────────
@@ -141,8 +181,8 @@ export default function ClubPage() {
   const [menuOpen, setMenuOpen]               = useState(false);
   const [selectedSupport, setSelectedSupport] = useState(1);
 
-  const tier    = TIERS[selectedTier];
-  const clubPct = Math.round((CLUB.clubRaised / CLUB.clubGoal) * 100);
+  const tier      = TIERS[selectedTier];
+  const clubPct   = Math.round((CLUB.clubRaised / CLUB.clubGoal) * 100);
   const clubMissing = CLUB.clubGoal - CLUB.clubRaised;
 
   function togglePartner(i: number) {
@@ -198,7 +238,7 @@ export default function ClubPage() {
           <div className="flex items-center gap-3">
             <SupSportLogo className="hidden md:block h-5 w-auto" />
             <div className="hidden md:block w-px h-6 bg-white/20" />
-            <button onClick={() => scrollToSection(4)}
+            <button onClick={() => scrollToSection(5)}
               className="hidden md:inline-flex items-center gap-2 rounded-2xl px-5 py-2 text-sm font-bold text-white hover:opacity-90 transition-all shadow-sm"
               style={{ background: "#009EBE" }}>
               <Heart className="w-4 h-4" /> Soutenir le club
@@ -224,7 +264,7 @@ export default function ClubPage() {
                   </button>
                 ))}
                 <div className="pt-2 pb-1">
-                  <button onClick={() => scrollToSection(4)}
+                  <button onClick={() => scrollToSection(5)}
                     className="w-full inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-bold text-white min-h-[48px]"
                     style={{ background: "#009EBE" }}>
                     <Heart className="w-4 h-4" /> Soutenir le club
@@ -250,38 +290,35 @@ export default function ClubPage() {
       >
 
         {/* ══════════════════════════════════════════════════════════
-            S1 — ACCUEIL
+            S0 — ACCUEIL
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[0] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(135deg,#003d50 0%,#006880 60%,#009EBE 100%)" }}
           className="relative flex flex-col items-center justify-center text-center overflow-hidden px-5"
         >
-          {/* Blobs déco */}
           <div className="absolute top-0 right-0 w-72 md:w-[500px] h-72 md:h-[500px] rounded-full blur-[100px] md:blur-[130px] pointer-events-none opacity-20" style={{ background: "#69C3D2" }} />
           <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full blur-[80px] pointer-events-none opacity-10" style={{ background: "#e85d04" }} />
 
           <motion.div className="relative z-10 flex flex-col items-center w-full max-w-2xl"
             initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
 
-            {/* Logos — compacts sur mobile */}
             <div className="flex items-center gap-3 mb-5">
               <FFCKLogo className="h-8 md:h-11 w-auto" />
               <div className="w-px h-6 bg-white/20" />
               <SupSportLogo className="h-4 md:h-5 w-auto opacity-80" />
             </div>
 
-            {/* Headline */}
             <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl font-black text-white leading-tight mb-2">
               Financez la performance.<br />
               <span style={{ color: "#69C3D2" }}>Recevez des avantages.</span>
             </h1>
             <p className="text-white/60 text-sm md:text-base max-w-md mb-5 leading-relaxed">
-              {ATHLETES.length} athlètes belges de kayak ont besoin de vous. Chaque don compte —
-              et vous récupérez souvent <strong className="text-white">plus que vous ne donnez.</strong>
+              {ATHLETES.length} athlètes belges de kayak financent leur saison <strong className="text-white">de leur propre poche.</strong>{" "}
+              Championnats d'Europe, du Monde, matériel, kiné… Aidez-les à y aller.
             </p>
 
-            {/* Cagnotte — pièce centrale */}
+            {/* Cagnotte */}
             <div className="w-full max-w-sm bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-5 border border-white/15">
               <div className="flex items-end justify-between mb-1.5">
                 <div>
@@ -304,29 +341,26 @@ export default function ClubPage() {
               </div>
             </div>
 
-            {/* CTAs */}
             <div className="flex flex-col gap-2.5 w-full max-w-xs">
-              <button onClick={() => scrollToSection(4)}
+              <button onClick={() => scrollToSection(5)}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 font-bold text-base text-white min-h-[52px] hover:opacity-90 transition-all shadow-xl"
                 style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}>
                 <Heart className="w-5 h-5" />
                 Je finance un athlète
                 <ArrowRight className="w-4 h-4" />
               </button>
-              <button onClick={() => scrollToSection(1)}
+              <button onClick={() => scrollToSection(2)}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-semibold text-sm text-white/75 min-h-[44px] border border-white/20 hover:bg-white/10 transition-all">
-                Comment ça marche
+                Pourquoi ils ont besoin de vous
                 <ChevronDown className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Bonus savings — discret */}
             <p className="mt-4 text-white/35 text-xs">
               Et économisez jusqu'à <span className="text-green-400 font-semibold">+€45/mois</span> chez nos {PARTNERS.length} partenaires
             </p>
           </motion.div>
 
-          {/* Scroll indicator */}
           <button onClick={() => scrollToSection(1)}
             className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/25 hover:text-white/60 transition-colors"
             style={{ animation: "bounce 2s infinite" }}>
@@ -335,7 +369,7 @@ export default function ClubPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            S2 — COMMENT ÇA MARCHE
+            S1 — COMMENT ÇA MARCHE
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[1] = el; }}
@@ -343,7 +377,6 @@ export default function ClubPage() {
           className="flex flex-col overflow-y-auto"
         >
           <div className="container mx-auto max-w-4xl px-5 py-7 flex flex-col min-h-full">
-            {/* Titre */}
             <div className="text-center mb-6 flex-shrink-0">
               <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold mb-3"
                 style={{ color: "#009EBE", borderColor: "rgba(0,158,190,0.2)", background: "rgba(0,158,190,0.08)" }}>
@@ -352,7 +385,6 @@ export default function ClubPage() {
               <h2 className="text-2xl md:text-4xl font-black text-foreground">Comment ça marche ?</h2>
             </div>
 
-            {/* 3 étapes */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-6">
               {[
                 {
@@ -381,7 +413,6 @@ export default function ClubPage() {
                     background: step.highlight ? "rgba(0,158,190,0.04)" : "white",
                     borderColor: step.highlight ? "#009EBE" : "hsl(193,30%,88%)",
                   }}>
-                  {/* Mobile: row layout */}
                   <div className="flex md:block items-start gap-3">
                     <div className="flex items-center gap-2 flex-shrink-0 md:mb-4">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white"
@@ -390,7 +421,7 @@ export default function ClubPage() {
                       </div>
                       <span className="text-xl">{step.emoji}</span>
                     </div>
-                    <div className="flex-1 md:mt-0">
+                    <div className="flex-1">
                       <h3 className="font-black text-foreground text-base md:text-lg mb-1 leading-snug">{step.title}</h3>
                       <p className="text-muted-foreground text-sm leading-relaxed">{step.body}</p>
                       {step.highlight && (
@@ -404,9 +435,8 @@ export default function ClubPage() {
               ))}
             </div>
 
-            {/* CTA */}
             <div className="text-center flex-shrink-0 pb-2">
-              <button onClick={() => scrollToSection(4)}
+              <button onClick={() => scrollToSection(5)}
                 className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-4 font-bold text-base text-white min-h-[52px] hover:opacity-90 transition-all shadow-lg"
                 style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}>
                 <Heart className="w-5 h-5" />
@@ -419,14 +449,102 @@ export default function ClubPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            S3 — AVANTAGES PARTENAIRES
+            S2 — POURQUOI ILS ONT BESOIN DE VOUS
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[2] = el; }}
+          style={{ scrollSnapAlign: "start", height: SECTION_H }}
+          className="relative flex flex-col overflow-hidden"
+        >
+          {/* Fond sombre dramatique */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(160deg,#0a0a0a 0%,#1a1a2e 50%,#16213e 100%)" }} />
+          <div className="absolute top-0 left-0 w-72 h-72 rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ background: "#e85d04" }} />
+          <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-[100px] opacity-15 pointer-events-none" style={{ background: "#009EBE" }} />
+
+          <div className="relative z-10 flex flex-col h-full overflow-y-auto">
+            {/* Header */}
+            <div className="flex-shrink-0 px-5 pt-6 pb-4 text-center">
+              <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold mb-3"
+                style={{ color: "#e85d04", borderColor: "rgba(232,93,4,0.3)", background: "rgba(232,93,4,0.1)" }}>
+                <AlertTriangle className="w-3.5 h-3.5" /> La réalité du sport amateur belge
+              </span>
+              <h2 className="text-xl md:text-3xl font-black text-white mb-2">
+                Ils compétissent pour la Belgique.<br />
+                <span style={{ color: "#e85d04" }}>L'État ne paie pas.</span>
+              </h2>
+              <p className="text-white/50 text-sm max-w-lg mx-auto leading-relaxed">
+                Nos athlètes ne sont pas professionnels. Ils étudient ou travaillent à plein temps,
+                et financent eux-mêmes chaque compétition, chaque stage, chaque kayak.
+              </p>
+            </div>
+
+            {/* Grille de coûts */}
+            <div className="flex-1 overflow-y-auto px-5 pb-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3 max-w-3xl mx-auto">
+                {ATHLETE_COSTS.map((cost, i) => (
+                  <motion.div key={i}
+                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.08 }}
+                    className="rounded-2xl p-3.5 md:p-4 relative overflow-hidden"
+                    style={{
+                      background: cost.highlight ? "rgba(232,93,4,0.12)" : "rgba(255,255,255,0.05)",
+                      border: cost.highlight ? "1px solid rgba(232,93,4,0.35)" : "1px solid rgba(255,255,255,0.08)",
+                    }}>
+                    {cost.highlight && (
+                      <div className="absolute top-0 right-0 rounded-bl-xl px-2 py-0.5 text-[9px] font-black uppercase tracking-wider"
+                        style={{ background: "#e85d04", color: "#fff" }}>
+                        Le plus cher
+                      </div>
+                    )}
+                    <div className="text-2xl mb-2">{cost.emoji}</div>
+                    <p className="text-white font-bold text-xs md:text-sm mb-1 leading-snug">{cost.label}</p>
+                    <p className="text-white/40 text-[10px] leading-relaxed mb-2 hidden md:block">{cost.detail}</p>
+                    <p className="font-black text-base md:text-lg" style={{ color: cost.highlight ? "#e85d04" : "#69C3D2" }}>
+                      {cost.amount}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Total + CTA */}
+            <div className="flex-shrink-0 px-5 py-4">
+              {/* Bloc total */}
+              <div className="max-w-3xl mx-auto rounded-2xl p-4 mb-4 flex flex-col md:flex-row items-center justify-between gap-3"
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div>
+                  <p className="text-white/40 text-xs uppercase tracking-wide font-semibold mb-0.5">Coût total estimé par athlète et par saison</p>
+                  <p className="text-white font-black text-2xl md:text-3xl">€5 000 – €12 000
+                    <span className="text-white/30 text-sm font-normal ml-2">payés de leur poche</span>
+                  </p>
+                </div>
+                <div className="text-center md:text-right">
+                  <p className="text-white/40 text-xs mb-1">Subvention publique reçue</p>
+                  <p className="font-black text-2xl" style={{ color: "#e85d04" }}>€0</p>
+                </div>
+              </div>
+
+              <div className="max-w-3xl mx-auto">
+                <button onClick={() => scrollToSection(5)}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 font-bold text-base text-white min-h-[52px] hover:opacity-90 transition-all shadow-xl"
+                  style={{ background: "linear-gradient(135deg,#e85d04,#c04a00)" }}>
+                  <Heart className="w-5 h-5" />
+                  Aider nos athlètes à y aller
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════
+            S3 — AVANTAGES PARTENAIRES
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          ref={el => { sectionRefs.current[3] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(180deg,#003d50 0%,#005a70 100%)" }}
           className="flex flex-col overflow-hidden"
         >
-          {/* Header */}
           <div className="flex-shrink-0 container mx-auto px-4 pt-5 md:pt-8 pb-3">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-2">
               <div>
@@ -436,8 +554,7 @@ export default function ClubPage() {
                 </span>
                 <h2 className="text-xl md:text-3xl font-black text-white">Vos remises partenaires</h2>
               </div>
-              {/* Tier selector — scrollable horizontal */}
-              <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" as never }}>
+              <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
                 {TIERS.map((t, i) => (
                   <button key={t.amount} onClick={() => setSelectedTier(i)}
                     className={`relative flex-shrink-0 rounded-xl px-3 py-2 text-xs font-semibold min-h-[44px] transition-all ${selectedTier === i ? "text-white scale-105" : "text-white/50 hover:text-white/75"}`}
@@ -454,7 +571,6 @@ export default function ClubPage() {
             </p>
           </div>
 
-          {/* Grid scrollable */}
           <div className="flex-1 overflow-y-auto container mx-auto px-4 pb-2" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.12) transparent" }}>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
               {PARTNERS.map((p, i) => {
@@ -490,9 +606,8 @@ export default function ClubPage() {
             </div>
           </div>
 
-          {/* CTA */}
           <div className="flex-shrink-0 container mx-auto px-4 py-2.5 text-center">
-            <button onClick={() => scrollToSection(4)}
+            <button onClick={() => scrollToSection(5)}
               className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-bold text-sm min-h-[48px] hover:opacity-90 transition-all shadow-lg"
               style={{ background: "#69C3D2", color: "#003d50" }}>
               <Heart className="w-4 h-4" />
@@ -506,7 +621,7 @@ export default function ClubPage() {
             S4 — ATHLÈTES
         ══════════════════════════════════════════════════════════ */}
         <section
-          ref={el => { sectionRefs.current[3] = el; }}
+          ref={el => { sectionRefs.current[4] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "hsl(195,100%,99%)" }}
           className="flex flex-col overflow-hidden"
         >
@@ -514,7 +629,7 @@ export default function ClubPage() {
             <div className="flex items-end justify-between">
               <div>
                 <h2 className="text-xl md:text-3xl font-black text-foreground mb-0.5">Nos athlètes</h2>
-                <p className="text-muted-foreground text-sm">Votre soutien finance directement leur passion</p>
+                <p className="text-muted-foreground text-sm">Chaque profil, une vraie histoire de sacrifice et de passion</p>
               </div>
               <span className="hidden md:flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Star className="w-3.5 h-3.5 text-yellow-500" />{ATHLETES.length} athlètes actifs
@@ -562,24 +677,21 @@ export default function ClubPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            S5 — SOUTENIR : cartes d'engagement
+            S5 — SOUTENIR
         ══════════════════════════════════════════════════════════ */}
         <section
-          ref={el => { sectionRefs.current[4] = el; }}
+          ref={el => { sectionRefs.current[5] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H }}
           className="relative flex flex-col overflow-hidden"
         >
-          {/* Background */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg,#003d50 0%,#006880 100%)" }} />
           <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[120px] pointer-events-none opacity-15" style={{ background: "#69C3D2" }} />
 
           <div className="relative z-10 flex flex-col h-full overflow-y-auto">
             <div className="flex-shrink-0 px-5 pt-6 pb-4 text-center">
-              {/* Titre */}
               <h2 className="text-xl md:text-3xl font-black text-white mb-1">Choisissez votre engagement</h2>
               <p className="text-white/50 text-xs md:text-sm">100% reversé aux athlètes · Annulable à tout moment</p>
 
-              {/* Progress compact */}
               <div className="max-w-xs mx-auto mt-4 mb-4">
                 <div className="flex justify-between text-[11px] text-white/40 mb-1">
                   <span>€{CLUB.clubRaised.toLocaleString("fr-BE")} collectés</span>
@@ -589,7 +701,6 @@ export default function ClubPage() {
                 <p className="text-white/25 text-[10px] mt-1">{clubPct}% atteint · {CLUB.clubSupporters} supporters</p>
               </div>
 
-              {/* Toggle */}
               <div className="inline-flex rounded-2xl overflow-hidden border border-white/15 bg-white/5 mb-1">
                 {(["monthly", "once"] as const).map(type => (
                   <button key={type} onClick={() => setDonationType(type)}
@@ -601,9 +712,9 @@ export default function ClubPage() {
               </div>
             </div>
 
-            {/* ── Cartes — scroll horizontal sur mobile, grille sur desktop ── */}
+            {/* Cards — carousel mobile / grille desktop */}
             <div
-              className="flex md:grid md:grid-cols-3 gap-3 md:gap-4 overflow-x-auto md:overflow-visible px-5 md:px-5 pb-4 flex-shrink-0"
+              className="flex md:grid md:grid-cols-3 gap-3 md:gap-4 overflow-x-auto md:overflow-visible px-5 pb-4 flex-shrink-0"
               style={{ scrollbarWidth: "none", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" as never }}
             >
               {SUPPORT_TIERS.map((t, i) => {
@@ -620,16 +731,13 @@ export default function ClubPage() {
                         : "rgba(255,255,255,0.07)",
                       border: isSelected ? "2px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.12)",
                     }}>
-
                     {t.popular && (
                       <div className="py-1.5 text-center text-[10px] font-black uppercase tracking-wider text-white"
                         style={{ background: "rgba(255,255,255,0.15)" }}>
                         ⭐ Le plus populaire
                       </div>
                     )}
-
                     <div className={`p-4 ${t.popular ? "pt-3" : ""}`}>
-                      {/* Montant */}
                       <div className="flex items-end gap-2 mb-1.5">
                         <span className="text-3xl font-black text-white">€{t.amount}</span>
                         <span className="text-white/50 text-xs mb-1">{donationType === "monthly" ? "/mois" : " (unique)"}</span>
@@ -638,15 +746,11 @@ export default function ClubPage() {
                         <span className="text-base">{t.icon}</span>
                         <span className="font-bold text-white text-sm">{t.label}</span>
                       </div>
-
-                      {/* Impact */}
                       <div className="rounded-xl px-3 py-2.5 mb-3"
                         style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)" }}>
                         <p className="text-[10px] text-white/50 uppercase tracking-wide font-semibold mb-0.5">Impact direct</p>
                         <p className="text-sm font-bold text-white leading-snug">{t.impactLine}</p>
                       </div>
-
-                      {/* Features */}
                       <ul className="space-y-1.5 mb-4">
                         {t.features.map((f, j) => (
                           <li key={j} className="flex items-center gap-2 text-xs text-white/70">
@@ -655,8 +759,6 @@ export default function ClubPage() {
                           </li>
                         ))}
                       </ul>
-
-                      {/* CTA */}
                       <div
                         className="w-full rounded-xl py-3 text-sm font-bold text-center text-white"
                         style={{
@@ -673,7 +775,7 @@ export default function ClubPage() {
               })}
             </div>
 
-            {/* Indicateurs de scroll (mobile only) */}
+            {/* Dots carousel mobile */}
             <div className="flex md:hidden justify-center gap-2 mb-4 flex-shrink-0">
               {SUPPORT_TIERS.map((_, i) => (
                 <button key={i} onClick={() => setSelectedSupport(i)}
@@ -697,7 +799,7 @@ export default function ClubPage() {
             S6 — CONTACT / FOOTER
         ══════════════════════════════════════════════════════════ */}
         <section
-          ref={el => { sectionRefs.current[5] = el; }}
+          ref={el => { sectionRefs.current[6] = el; }}
           style={{ scrollSnapAlign: "start", height: SECTION_H, background: "#003d50" }}
           className="flex flex-col items-center justify-center text-white overflow-y-auto px-5"
         >
@@ -745,7 +847,7 @@ export default function ClubPage() {
                   <ShieldCheck className="w-4 h-4" /> Paiements sécurisés via Stripe
                 </div>
                 <div className="mt-4">
-                  <button onClick={() => scrollToSection(4)}
+                  <button onClick={() => scrollToSection(5)}
                     className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white min-h-[48px] hover:opacity-90 transition-all"
                     style={{ background: "#009EBE" }}>
                     <Heart className="w-4 h-4" /> Soutenir maintenant
@@ -768,10 +870,10 @@ export default function ClubPage() {
       </div>{/* end scroll container */}
 
       {/* ══════════════════════════════════════════════════════════════
-          BOUTON FLOTTANT MOBILE — visible sur toutes les sections sauf S5
+          BOUTON FLOTTANT MOBILE — masqué sur la section Soutenir (S5)
       ══════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
-        {activeSection !== 4 && (
+        {activeSection !== 5 && (
           <motion.div
             key="floating-cta"
             initial={{ y: 80, opacity: 0 }}
@@ -785,7 +887,7 @@ export default function ClubPage() {
             }}
           >
             <button
-              onClick={() => scrollToSection(4)}
+              onClick={() => scrollToSection(5)}
               className="w-full inline-flex items-center justify-center gap-2 rounded-2xl py-4 font-bold text-base text-white min-h-[54px] shadow-2xl active:opacity-90 transition-all"
               style={{ background: "linear-gradient(135deg,#009EBE,#006880)" }}
             >
