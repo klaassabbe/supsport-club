@@ -3,7 +3,7 @@ import {
   MapPin, Users, Heart, ExternalLink, Award,
   ChevronRight, ChevronDown, CheckCircle, Star,
   Gift, Zap, ShieldCheck, ArrowRight,
-  Menu, X, AlertTriangle,
+  Menu, X,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,51 +25,39 @@ const CLUB = {
 // ── Coûts réels d'un athlète (section Pourquoi) ───────────────────
 const ATHLETE_COSTS = [
   {
-    emoji: "🏆",
     label: "Championnats d'Europe",
     detail: "Inscription + vol + hébergement sur place",
     amount: "~€1 200",
-    amountRaw: 1200,
     highlight: false,
   },
   {
-    emoji: "🌍",
     label: "Championnats du Monde",
     detail: "Inscription + vols internationaux + hébergement 7-10 jours",
     amount: "~€2 800",
-    amountRaw: 2800,
     highlight: true,
   },
   {
-    emoji: "🛶",
     label: "Kayak de compétition",
-    detail: "Coque carbone homologuée compétition (renouvelé tous les 3-5 ans)",
+    detail: "Coque carbone homologuée (renouvelée tous les 3-5 ans)",
     amount: "€3 000 – €7 000",
-    amountRaw: 5000,
     highlight: false,
   },
   {
-    emoji: "🪶",
     label: "Pagaie carbone",
-    detail: "Pagaie technique carbone, personnalisée selon la discipline",
+    detail: "Pagaie technique personnalisée selon la discipline",
     amount: "€400 – €800",
-    amountRaw: 600,
     highlight: false,
   },
   {
-    emoji: "⛰️",
     label: "Stages de préparation",
-    detail: "Stage altitude, stages techniques, camps d'entraînement",
-    amount: "~€900/an",
-    amountRaw: 900,
+    detail: "Stage altitude, camps techniques, préparation physique",
+    amount: "~€900 / an",
     highlight: false,
   },
   {
-    emoji: "💆",
     label: "Kiné & récupération",
-    detail: "Suivi médical, ostéo, récupération musculaire régulière",
-    amount: "~€120/mois",
-    amountRaw: 1440,
+    detail: "Suivi médical, ostéo, récupération musculaire",
+    amount: "~€120 / mois",
     highlight: false,
   },
 ];
@@ -453,86 +441,72 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════ */}
         <section
           ref={el => { sectionRefs.current[2] = el; }}
-          style={{ scrollSnapAlign: "start", height: SECTION_H }}
-          className="relative flex flex-col overflow-hidden"
+          style={{ scrollSnapAlign: "start", height: SECTION_H, background: "linear-gradient(180deg,#002d3e 0%,#003d50 100%)" }}
+          className="flex flex-col overflow-hidden"
         >
-          {/* Fond sombre dramatique */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(160deg,#0a0a0a 0%,#1a1a2e 50%,#16213e 100%)" }} />
-          <div className="absolute top-0 left-0 w-72 h-72 rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ background: "#e85d04" }} />
-          <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-[100px] opacity-15 pointer-events-none" style={{ background: "#009EBE" }} />
+          {/* Header */}
+          <div className="flex-shrink-0 container mx-auto px-5 pt-6 md:pt-8 pb-4">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 mb-3"
+              style={{ background: "rgba(255,255,255,0.07)" }}>
+              La réalité du sport amateur belge
+            </span>
+            <h2 className="text-xl md:text-3xl font-black text-white mb-2">
+              Ils compétissent pour la Belgique.<br />
+              <span style={{ color: "#69C3D2" }}>L'État ne finance pas.</span>
+            </h2>
+            <p className="text-white/50 text-sm max-w-xl leading-relaxed">
+              Nos athlètes étudient ou travaillent à temps plein. Championnats, matériel, stages, kiné —
+              tout sort de leur poche. Aucune subvention publique.
+            </p>
+          </div>
 
-          <div className="relative z-10 flex flex-col h-full overflow-y-auto">
-            {/* Header */}
-            <div className="flex-shrink-0 px-5 pt-6 pb-4 text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold mb-3"
-                style={{ color: "#e85d04", borderColor: "rgba(232,93,4,0.3)", background: "rgba(232,93,4,0.1)" }}>
-                <AlertTriangle className="w-3.5 h-3.5" /> La réalité du sport amateur belge
-              </span>
-              <h2 className="text-xl md:text-3xl font-black text-white mb-2">
-                Ils compétissent pour la Belgique.<br />
-                <span style={{ color: "#e85d04" }}>L'État ne paie pas.</span>
-              </h2>
-              <p className="text-white/50 text-sm max-w-lg mx-auto leading-relaxed">
-                Nos athlètes ne sont pas professionnels. Ils étudient ou travaillent à plein temps,
-                et financent eux-mêmes chaque compétition, chaque stage, chaque kayak.
-              </p>
+          {/* Grille de coûts */}
+          <div className="flex-1 overflow-y-auto container mx-auto px-5 pb-2" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.1) transparent" }}>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3 max-w-3xl">
+              {ATHLETE_COSTS.map((cost, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: i * 0.07 }}
+                  className="rounded-2xl p-4 relative"
+                  style={{
+                    background: cost.highlight ? "rgba(0,158,190,0.12)" : "rgba(255,255,255,0.05)",
+                    border: cost.highlight ? "1px solid rgba(0,158,190,0.35)" : "1px solid rgba(255,255,255,0.08)",
+                  }}>
+                  {cost.highlight && (
+                    <div className="absolute top-0 right-0 rounded-bl-xl rounded-tr-2xl px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+                      style={{ background: "#009EBE", color: "#fff" }}>
+                      Poste le plus élevé
+                    </div>
+                  )}
+                  <p className="text-white/60 text-[10px] uppercase tracking-wide font-semibold mb-1 mt-1">{cost.label}</p>
+                  <p className="font-black text-xl md:text-2xl text-white mb-1">{cost.amount}</p>
+                  <p className="text-white/35 text-[10px] leading-relaxed hidden md:block">{cost.detail}</p>
+                </motion.div>
+              ))}
             </div>
+          </div>
 
-            {/* Grille de coûts */}
-            <div className="flex-1 overflow-y-auto px-5 pb-2">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3 max-w-3xl mx-auto">
-                {ATHLETE_COSTS.map((cost, i) => (
-                  <motion.div key={i}
-                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.08 }}
-                    className="rounded-2xl p-3.5 md:p-4 relative overflow-hidden"
-                    style={{
-                      background: cost.highlight ? "rgba(232,93,4,0.12)" : "rgba(255,255,255,0.05)",
-                      border: cost.highlight ? "1px solid rgba(232,93,4,0.35)" : "1px solid rgba(255,255,255,0.08)",
-                    }}>
-                    {cost.highlight && (
-                      <div className="absolute top-0 right-0 rounded-bl-xl px-2 py-0.5 text-[9px] font-black uppercase tracking-wider"
-                        style={{ background: "#e85d04", color: "#fff" }}>
-                        Le plus cher
-                      </div>
-                    )}
-                    <div className="text-2xl mb-2">{cost.emoji}</div>
-                    <p className="text-white font-bold text-xs md:text-sm mb-1 leading-snug">{cost.label}</p>
-                    <p className="text-white/40 text-[10px] leading-relaxed mb-2 hidden md:block">{cost.detail}</p>
-                    <p className="font-black text-base md:text-lg" style={{ color: cost.highlight ? "#e85d04" : "#69C3D2" }}>
-                      {cost.amount}
-                    </p>
-                  </motion.div>
-                ))}
+          {/* Total + CTA */}
+          <div className="flex-shrink-0 container mx-auto px-5 py-4">
+            <div className="max-w-3xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-2xl p-4 mb-4"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div>
+                <p className="text-white/40 text-xs uppercase tracking-wide font-semibold mb-1">Coût total estimé par athlète / saison</p>
+                <p className="text-white font-black text-2xl md:text-3xl">€5 000 – €12 000</p>
+              </div>
+              <div className="md:text-right">
+                <p className="text-white/40 text-xs uppercase tracking-wide font-semibold mb-1">Subvention publique reçue</p>
+                <p className="font-black text-2xl text-white">€0</p>
               </div>
             </div>
-
-            {/* Total + CTA */}
-            <div className="flex-shrink-0 px-5 py-4">
-              {/* Bloc total */}
-              <div className="max-w-3xl mx-auto rounded-2xl p-4 mb-4 flex flex-col md:flex-row items-center justify-between gap-3"
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div>
-                  <p className="text-white/40 text-xs uppercase tracking-wide font-semibold mb-0.5">Coût total estimé par athlète et par saison</p>
-                  <p className="text-white font-black text-2xl md:text-3xl">€5 000 – €12 000
-                    <span className="text-white/30 text-sm font-normal ml-2">payés de leur poche</span>
-                  </p>
-                </div>
-                <div className="text-center md:text-right">
-                  <p className="text-white/40 text-xs mb-1">Subvention publique reçue</p>
-                  <p className="font-black text-2xl" style={{ color: "#e85d04" }}>€0</p>
-                </div>
-              </div>
-
-              <div className="max-w-3xl mx-auto">
-                <button onClick={() => scrollToSection(5)}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 font-bold text-base text-white min-h-[52px] hover:opacity-90 transition-all shadow-xl"
-                  style={{ background: "linear-gradient(135deg,#e85d04,#c04a00)" }}>
-                  <Heart className="w-5 h-5" />
-                  Aider nos athlètes à y aller
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+            <div className="max-w-3xl">
+              <button onClick={() => scrollToSection(5)}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 font-bold text-sm min-h-[52px] hover:opacity-90 transition-all shadow-lg"
+                style={{ background: "#69C3D2", color: "#003d50" }}>
+                <Heart className="w-4 h-4" />
+                Aider nos athlètes à y aller
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </section>
